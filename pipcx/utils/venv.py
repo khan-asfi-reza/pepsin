@@ -30,14 +30,14 @@ def install_venv():
         pip3_install(*missing)
 
 
-def initialize_venv():
-    python_sys_execute("virtualenv", "venv")
+def initialize_venv(venv_dir: str = "venv"):
+    python_sys_execute("virtualenv", venv_dir)
 
 
-def activate_venv():
+def activate_venv(venv_dir: str = "venv"):
     sys_os = get_os()
     working_dir = os.getcwd()
     if sys_os == OSEnum.WIN:
-        os.system(os.path.join(working_dir, 'venv/scripts/activate'))
+        os.system(os.path.join(working_dir, f'{venv_dir}/scripts/activate'))
     else:
-        os.system('source venv/bin/activate')
+        os.system(f'source {venv_dir}/bin/activate')
