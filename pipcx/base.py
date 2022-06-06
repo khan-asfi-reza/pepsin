@@ -3,26 +3,16 @@ from abc import ABC, abstractmethod
 from argparse import ArgumentParser
 from io import TextIOBase
 
+from pipcx.version import get_version
+
 
 class OutputWrapper(TextIOBase):
     """
     Wrapper around stdout/stderr
     """
 
-    @property
-    def style_func(self):
-        return self._style_func
-
-    @style_func.setter
-    def style_func(self, style_func):
-        if style_func and self.isatty():
-            self._style_func = style_func
-        else:
-            self._style_func = lambda x: x
-
     def __init__(self, out, ending="\n"):
         self._out = out
-        self.style_func = None
         self.ending = ending
 
     def __getattr__(self, name):
@@ -43,51 +33,14 @@ class OutputWrapper(TextIOBase):
         self._out.write(style_func(msg))
 
 
-class CommandError(Exception):
+class InvalidCommandError(Exception):
     """
     Exception class indicating a problem while executing a management
     command.
-
-    If this exception is raised during the execution of a management
-    command, it will be caught and turned into a nicely-printed error
-    message to the appropriate output stream (i.e., stderr); as a
-    result, raising this exception (with a sensible description of the
-    error) is the preferred way to indicate that something has gone
-    wrong in the execution of a command.
     """
-
-    def __init__(self, *args, returncode=1, **kwargs):
-        self.returncode = returncode
-        super().__init__(*args, **kwargs)
-
-
-class CommandParser(ArgumentParser):
-    """
-    Customized ArgumentParser class to improve some error messages and prevent
-    SystemExit in several occasions, as SystemExit is unacceptable when a
-    command is called programmatically.
-    """
-
-    def __init__(
-            self, *, missing_args_message=None, called_from_command_line=None, **kwargs
-    ):
-        self.missing_args_message = missing_args_message
-        self.called_from_command_line = called_from_command_line
-        super().__init__(**kwargs)
-
-    def parse_args(self, args=None, namespace=None):
-        # Catch missing argument for a better error message
-        if self.missing_args_message and not (
-                args or any(not arg.startswith("-") for arg in args)
-        ):
-            self.error(self.missing_args_message)
-        return super().parse_args(args, namespace)
-
-    def error(self, message):
-        if self.called_from_command_line:
-            super().error(message)
-        else:
-            raise CommandError("Error: %s" % message)
+    def __init__(self, return_code=1, *args):
+        self.return_code = return_code
+        super().__init__(*args)
 
 
 class Base(ABC):
@@ -95,26 +48,34 @@ class Base(ABC):
         self.stdout = OutputWrapper(sys.stdout)
         self.stderr = OutputWrapper(sys.stderr)
 
-    def get_version(self):
-        return '1'
-
-    def setup_parser(self):
-        parser = ArgumentParser()
+    def setup_parser(self, program_name, command):
+        parser = ArgumentParser(
+            prog=f"{program_name} {command}"
+        )
         parser.add_argument(
             "--version",
             action="version",
-            version=self.get_version(),
+            version=get_version(),
         )
+        self.add_argument(parser)
         return parser
 
-    @abstractmethod
-    def execute(self):
+    def print_help(self, program_name, command):
+        self.setup_parser(program_name, command).print_help()
+
+    def add_argument(self, parser):
         pass
 
-    def run(self):
-        parser = self.setup_parser()
-        options = parser.parse_args(sys.argv[2:])
-        cmd_options = vars(options)
-        # Move positional args out of options to mimic legacy optparse
-        args = cmd_options.pop("args", ())
+    @abstractmethod
+    def execute(self, *args, **kwargs):
+        pass
 
+    def run(self, argv):
+        parser = self.setup_parser(argv[0], argv[1])
+        options = vars(parser.parse_args(argv[2:]))
+        args = options.pop("args", ())
+        try:
+            self.execute(*args, **options)
+        except InvalidCommandError as e:
+            self.stderr.write("%s: %s" % (e.__class__.__name__, e))
+            sys.exit(e.return_code)
