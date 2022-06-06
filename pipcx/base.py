@@ -1,54 +1,41 @@
 import sys
 from abc import ABC, abstractmethod
 from argparse import ArgumentParser
-from io import TextIOBase
+from typing import Union
 
+from pipcx.error import InvalidCommandError
+from pipcx.io import IOBase
 from pipcx.version import get_version
 
 
-class OutputWrapper(TextIOBase):
+class Base(IOBase, ABC):
     """
-    Wrapper around stdout/stderr
+    The base class which all commands will inherit and it contains the signature methods and attributes
+    the base class parses the cli arguments, converts it into dictionary
+    Attributes:
+        1. ``help`` is the help text that will be shown in the output as help for a certain command
+        2. ``short_description`` short possible description to describe a command
+
+    Methods:
+        1. ``add_argument`` Adds custom argument to the parser, that will be later converted into dictionary
+            E.G:
+            ```
+            def add_argument(self, parser):
+                parser.add_argument('--option_1', action='store_true', help='Help Text')
+            ```
+        2. ``execute`` method is the abstract method that needs to be implement in the subclass of Base Class, every
+            command must have an ``execute`` method as business logic will be inside this method
     """
+    help = ''
+    short_description = ''
 
-    def __init__(self, out, ending="\n"):
-        self._out = out
-        self.ending = ending
-
-    def __getattr__(self, name):
-        return getattr(self._out, name)
-
-    def flush(self):
-        if hasattr(self._out, "flush"):
-            self._out.flush()
-
-    def isatty(self):
-        return hasattr(self._out, "isatty") and self._out.isatty()
-
-    def write(self, msg="", style_func=None, ending=None):
-        ending = self.ending if ending is None else ending
-        if ending and not msg.endswith(ending):
-            msg += ending
-        style_func = style_func or self.style_func
-        self._out.write(style_func(msg))
-
-
-class InvalidCommandError(Exception):
-    """
-    Exception class indicating a problem while executing a management
-    command.
-    """
-    def __init__(self, return_code=1, *args):
-        self.return_code = return_code
-        super().__init__(*args)
-
-
-class Base(ABC):
     def __init__(self):
-        self.stdout = OutputWrapper(sys.stdout)
-        self.stderr = OutputWrapper(sys.stderr)
+        super().__init__()
 
-    def setup_parser(self, program_name, command):
+    def get_parser(self, program_name: str, command: str) -> ArgumentParser:
+        """
+        Creates Argument Parser Class Object, add 'version' argument
+        """
         parser = ArgumentParser(
             prog=f"{program_name} {command}"
         )
@@ -57,25 +44,38 @@ class Base(ABC):
             action="version",
             version=get_version(),
         )
+        # Subclass custom arguments will be added via this method
         self.add_argument(parser)
         return parser
 
-    def print_help(self, program_name, command):
-        self.setup_parser(program_name, command).print_help()
+    def format_help(self, program_name: str, command: str) -> str:
+        """
+        returns help text
+        """
+        return self.get_parser(program_name, command).format_help()
 
-    def add_argument(self, parser):
+    def add_argument(self, parser: ArgumentParser):
+        """
+        Subclass custom arguments will be added via this method
+        """
         pass
 
     @abstractmethod
-    def execute(self, *args, **kwargs):
+    def execute(self, *args, **kwargs) -> Union[None, str]:
+        """
+        Main logic of the subclass
+        """
         pass
 
-    def run(self, argv):
-        parser = self.setup_parser(argv[0], argv[1])
+    def run(self, argv) -> None:
+        """
+        Runner method for command class
+        """
+        parser = self.get_parser(program_name=argv[0], command=argv[1])
         options = vars(parser.parse_args(argv[2:]))
         args = options.pop("args", ())
         try:
             self.execute(*args, **options)
         except InvalidCommandError as e:
-            self.stderr.write("%s: %s" % (e.__class__.__name__, e))
+            self.error("%s: %s" % (e.__class__.__name__, e))
             sys.exit(e.return_code)

@@ -1,50 +1,14 @@
-import functools
 import os
-import pkgutil
 import sys
-from importlib import import_module
 
-from pipcx.base import Base
-from pathlib import Path
-
+from pipcx.utils import load_command_class, get_commands
 from pipcx.version import get_version
 
-path = Path(__file__).resolve().parent
 
-
-def find_commands():
+class CLI:
     """
-    Finds commands located in the commands directory
+    CLI Class that will run the execute command
     """
-    function_directory = os.path.join(path, "commands")
-
-    return [
-        name
-        for _, name, is_pkg in pkgutil.iter_modules([function_directory])
-        if not is_pkg and not name.startswith("_")
-    ]
-
-
-def load_command_class(name) -> Base:
-    """
-    Every Command module has a Command class, which will be imported
-    :return Command Class
-    """
-    module = import_module(f"pipcx.commands.{name}")
-    return module.Command()
-
-
-@functools.lru_cache(maxsize=None)
-def get_commands():
-    """
-    Set of commands that will be returned
-    :return: set of commands
-    """
-    commands = {name for name in find_commands()}
-    return commands
-
-
-class Main:
 
     def __init__(self):
         self.argv = sys.argv[:]
@@ -58,19 +22,43 @@ class Main:
         except IndexError:
             self.command = "help"
 
+    def get_arg(self, index):
+        try:
+            return self.argv[index]
+        except IndexError:
+            return None
+
+    def print_help(self):
+        if self.command == 'help':
+            string = [
+                f"pipcx v{get_version()}",
+                "Type the name of the command and --help for help on a specific command",
+                "",
+                "Available commands: "
+            ]
+            for command in get_commands():
+                command_class = load_command_class(command)
+                string.append(
+                    f"{command} : {command_class.short_description}"
+                )
+
+            return '\n'.join(string)
+
+        elif self.get_arg(2) in ['--help', '-h', 'help']:
+            command_class = load_command_class(self.command)
+            return command_class.format_help(self.program_name, self.command)
+
     def execute(self):
-
-        command_class = load_command_class(self.command)
-        if self.argv[1:] == '--version':
-            sys.stdout.write(get_version() + "\n")
-
+        if self.command == 'help':
+            sys.stdout.write(self.print_help())
         else:
-            command_class.run(self.argv)
+            command_class = load_command_class(self.command)
+            if self.argv[1:] == '--version':
+                sys.stdout.write(get_version() + "\n")
+            else:
+                command_class.run(self.argv)
 
 
 def main():
-    runner = Main()
+    runner = CLI()
     runner.execute()
-
-
-main()
