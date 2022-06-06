@@ -4,14 +4,20 @@ import pkgutil
 import sys
 from importlib import import_module
 
-from base import Base
+from pipcx.base import Base
+from pathlib import Path
+
+from pipcx.version import get_version
+
+path = Path(__file__).resolve().parent
 
 
 def find_commands():
     """
     Finds commands located in the commands directory
     """
-    function_directory = os.path.join("commands")
+    function_directory = os.path.join(path, "commands")
+
     return [
         name
         for _, name, is_pkg in pkgutil.iter_modules([function_directory])
@@ -24,7 +30,7 @@ def load_command_class(name) -> Base:
     Every Command module has a Command class, which will be imported
     :return Command Class
     """
-    module = import_module(f"commands.{name}")
+    module = import_module(f"pipcx.commands.{name}")
     return module.Command()
 
 
@@ -38,10 +44,33 @@ def get_commands():
     return commands
 
 
-def run_command(name):
-    if name in get_commands():
-        klass = load_command_class(name)
-        klass.execute()
+class Main:
+
+    def __init__(self):
+        self.argv = sys.argv[:]
+        self.program_name = os.path.basename(self.argv[0])
+
+        if self.program_name == "__main__.py":
+            self.program_name = "python -m pipcx"
+
+        try:
+            self.command = self.argv[1]
+        except IndexError:
+            self.command = "help"
+
+    def execute(self):
+
+        command_class = load_command_class(self.command)
+        if self.argv[1:] == '--version':
+            sys.stdout.write(get_version() + "\n")
+
+        else:
+            command_class.run(self.argv)
 
 
-run_command("execute")
+def main():
+    runner = Main()
+    runner.execute()
+
+
+main()
