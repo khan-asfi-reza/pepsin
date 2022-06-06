@@ -1,9 +1,28 @@
 # pipcx
 
-#### Python Project Initializer CLI Tool
+#### Python Project Initializer CLI Tool, uses pip 
+To install packages
+
+`Discarded previous version for not maintaining and complexity of code`
 
 ### In Development
 
+Currently the goal is to create a simple tool to manage dependencies,
+Initialize projects (django, fastapi, flask) with production ready features.
+Initialize pytest, tox, github actions etc. Managing scripts to run,
+(Inspired by `npm run`)
+
+So primary goal is to -
+
+1. Create a toolchain to manage dependencies
+2. Project initialization
+3. Managing scripts
+4. File generation based on templates (tox, pytest)
+5. Dockerizing and customization hook
+
+The way of writing code is heavily inspired by `django.core.management`
+This project implements almost the similar strategy in terms of process and code writing.
+The main target is not to use any external tools to create a cli program
 
 [![GitHub Actions (Tests)](https://github.com/khan-asfi-reza/pipcx/workflows/Build/badge.svg)](https://github.com/khan-asfi-reza/pipcx)
 [![codecov](https://codecov.io/gh/khan-asfi-reza/pipcx/branch/master/graph/badge.svg?token=BS5ZJN8ZRI)](https://codecov.io/gh/khan-asfi-reza/pipcx)
