@@ -1,11 +1,14 @@
+from pipcx import version
 from setuptools import setup, find_packages
 
 with open("./README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
+VERSION = version.get_version()
+
 setup(
     name='pipcx',
-    version='1.0.0',
+    version=VERSION,
     include_package_data=True,
     description="Python PIP Toolchain cli",
     author="Khan Asfi Reza",
