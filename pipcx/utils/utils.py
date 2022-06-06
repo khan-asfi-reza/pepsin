@@ -14,7 +14,7 @@ def find_commands():
     """
     Finds commands located in the commands directory
     """
-    function_directory = os.path.join(ROOT, "commands")
+    function_directory = os.path.join(ROOT, "../commands")
 
     return [
         name
