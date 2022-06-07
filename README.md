@@ -1,4 +1,11 @@
-# pipcx
+<div align="center">
+    <h1>Pipcx</h1>
+    <div style="gap:10px;display: flex; justify-content: center" align="center">
+        <img src="https://github.com/khan-asfi-reza/pipcx/actions/workflows/development.yaml/badge.svg" alt="">
+        <img src="https://codecov.io/gh/khan-asfi-reza/pipcx/branch/master/graph/badge.svg?token=BS5ZJN8ZRI" alt="">
+        <img src="https://img.shields.io/badge/code%20style-pep8-orange.svg" alt="">
+    </div>
+</div>
 
 #### Python Project Initializer CLI Tool, uses pip 
 To install packages
@@ -24,106 +31,41 @@ The way of writing code is heavily inspired by `django.core.management`
 This project implements almost the similar strategy in terms of process and code writing.
 The main target is not to use any external tools to create a cli program
 
-[![GitHub Actions (Tests)](https://github.com/khan-asfi-reza/pipcx/workflows/Build/badge.svg)](https://github.com/khan-asfi-reza/pipcx)
-[![codecov](https://codecov.io/gh/khan-asfi-reza/pipcx/branch/master/graph/badge.svg?token=BS5ZJN8ZRI)](https://codecov.io/gh/khan-asfi-reza/pipcx)
-
 
 ### Requirements
-`python 3.6>`
+`python 3.6+`
 
 ## Installation
-### 1. Create a virtual environment and activate
 
-`windows`
-```cmd
- pip install virtualenv
- python3 -m virtualenv venv
- <YOUR WORKING DIRECTORY>/venv/scripts/activate
-```
->Your Current Working Directory
-
-`MacOS`
-```commandline
-pip install virtualenv
-python3 -m virtualenv venv
-source venv/bin/activate
+```shell
+$ pip3 install pipcx
 ```
 
-`Ubuntu [Debian]`
-```commandline
-sudo apt-get install python3-pip
-sudo pip3 install virtualenv 
-virtualenv venv 
-source venv/bin/activate
-```
->you can use any name instead of **venv**
-### 2. Install pipcx
-```cmd
-pip3 install pipcx
+## Usage
+
+### 1. `init` - Initializes a python project and virtualenv
+
+```shell
+$ pipcx init
 ```
 
-## Usages
-
-### 1. `init`
-
-Starts A Python Project
-
-```commandline
-pipcx init
+This will create a virtualenv and activate it along with project config yaml file in the project directory
+```
+Project  Directory
+|____ venv
+|____ pipcx.yaml
+|____ project
+      |___ main.py
+      |___ __init__.py
 ```
 
-```commandline
-Project Name[Project]: YOUR_PROJECT_NAME
-Project Author[ubuntu]: PETER_PARKER
-Project Description[]: A Web Slinger Project
+#### Options:
+
+`venv` / `--venv`  Virtualenv Directory name
+
+```shell
+$ pipcx myvenv 
 ```
+The above command will create a virtualenv under the name `myvenv`
 
-`No Input Option`: `--no-input`, `--ninp`
-
-This will automatically generate project without taking input
-```commandline
-pipcx init My_PROJECT --no-input
-```
-
-`Changing Source Directory Option`: `--src`, `source`
-
-Change Source Directory Option
-```commandline
-pipcx init My_PROJECT --no-input --src=newSrc
-```
-
-### 2. `run`
-
-Runs Python File
-
-```commandline
-pipcx run
-```
-Will run src/main.py by default
-
-```
-picx run src/test.py
-```
-Will Run test.py
-
-### 3. `createtest`
-
-Runs Python File
-
-```commandline
-pipcx createtest
-```
-Will generate `tests` folder for pytest
-
-### 4. `install`
-
-```
-pipcx install django
-```
-Will install libraries and add to config file
-
-### 5. `uninstall`
-```
-pipcx uninstall flask
-```
-Will uninstall library and remove from config file
+---
