@@ -1,16 +1,18 @@
 import os
 import sys
 
-from pipcx.utils import load_command_class, get_commands
+from pipcx.const import COMMAND_NOT_FOUND_ERROR
+from pipcx.io import IOBase
+from pipcx.utils.base import load_command_class, get_commands
 from pipcx.version import get_version
 
 
-class CLI:
+class CLI(IOBase):
     """
     CLI Class that will run the execute command
     """
-
     def __init__(self):
+        super().__init__()
         self.argv = sys.argv[:]
         self.program_name = os.path.basename(self.argv[0])
 
@@ -29,7 +31,7 @@ class CLI:
             return None
 
     def print_help(self):
-        if self.command == 'help':
+        if self.command in ['--help', '-h', 'help']:
             string = [
                 f"pipcx v{get_version()}",
                 "Type the name of the command and --help for help on a specific command",
@@ -49,14 +51,18 @@ class CLI:
             return command_class.format_help(self.program_name, self.command)
 
     def execute(self):
-        if self.command == 'help':
-            sys.stdout.write(self.print_help())
+        if self.command in ['--help', '-h', 'help']:
+            self.output(self.print_help())
         else:
-            command_class = load_command_class(self.command)
-            if self.argv[1:] == '--version':
-                sys.stdout.write(get_version() + "\n")
-            else:
-                command_class.run(self.argv)
+            try:
+                command_class = load_command_class(self.command)
+                if self.argv[1:] == '--version':
+                    self.output(get_version() + "\n")
+                else:
+                    command_class.run(self.argv)
+            except ModuleNotFoundError as e:
+                self.error(f"`{e.name.split('.')[-1]}` Command not available")
+                self.error(COMMAND_NOT_FOUND_ERROR)
 
 
 def main():
