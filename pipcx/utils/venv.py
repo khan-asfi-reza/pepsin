@@ -4,7 +4,7 @@ from sys import platform
 
 import pkg_resources
 
-from pipcx.utils import pip3_install, python_sys_execute
+from pipcx.utils.base import pip3_install, python_sys_execute
 
 
 class OSEnum(enum.Enum):
@@ -13,7 +13,10 @@ class OSEnum(enum.Enum):
     OSX = "darwin"
 
 
-def get_os():
+def get_os() -> OSEnum:
+    """
+    Returns System OS Platform name
+    """
     if platform == "linux" or platform == "linux2":
         return OSEnum.LINUX
     elif platform == "darwin":
@@ -22,7 +25,10 @@ def get_os():
         return OSEnum.WIN
 
 
-def install_venv():
+def install_venv() -> None:
+    """
+    Installs virtualenv library
+    """
     required = {'virtualenv'}
     installed = {pkg.key for pkg in pkg_resources.working_set}
     missing = required - installed
@@ -31,10 +37,16 @@ def install_venv():
 
 
 def initialize_venv(venv_dir: str = "venv"):
+    """
+    Initializes virtualenv directory
+    """
     python_sys_execute("virtualenv", venv_dir)
 
 
 def activate_venv(venv_dir: str = "venv"):
+    """
+    Activates virtualenv
+    """
     sys_os = get_os()
     working_dir = os.getcwd()
     if sys_os == OSEnum.WIN:

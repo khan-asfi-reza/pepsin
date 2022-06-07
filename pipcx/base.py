@@ -1,3 +1,6 @@
+"""
+This module contains Base Class for all commands
+"""
 import sys
 from abc import ABC, abstractmethod
 from argparse import ArgumentParser
@@ -10,27 +13,31 @@ from pipcx.version import get_version
 
 class Base(IOBase, ABC):
     """
-    The base class which all commands will inherit and it contains the signature methods and attributes
-    the base class parses the cli arguments, converts it into dictionary
+    The base class which all commands will inherit
+    and it contains the signature methods and attributes
+    the base class parses the cli arguments,
+    converts it into dictionary
     Attributes:
-        1. ``help`` is the help text that will be shown in the output as help for a certain command
-        2. ``short_description`` short possible description to describe a command
+        1. ``help`` is the help text
+        that will be shown in the output as help
+        for a certain command
+        2. ``short_description``
+        short possible description to describe a command
 
     Methods:
-        1. ``add_argument`` Adds custom argument to the parser, that will be later converted into dictionary
+        1. ``add_argument`` Adds custom argument to the parser,
+        that will be later converted into dictionary
             E.G:
             ```
             def add_argument(self, parser):
                 parser.add_argument('--option_1', action='store_true', help='Help Text')
             ```
-        2. ``execute`` method is the abstract method that needs to be implement in the subclass of Base Class, every
+        2. ``execute`` method is the abstract method that needs to be
+        implement in the subclass of Base Class, every
             command must have an ``execute`` method as business logic will be inside this method
     """
     help = ''
     short_description = ''
-
-    def __init__(self):
-        super().__init__()
 
     def get_parser(self, program_name: str, command: str) -> ArgumentParser:
         """
@@ -58,14 +65,12 @@ class Base(IOBase, ABC):
         """
         Subclass custom arguments will be added via this method
         """
-        pass
 
     @abstractmethod
     def execute(self, *args, **kwargs) -> Union[None, str]:
         """
         Main logic of the subclass
         """
-        pass
 
     def run(self, argv) -> None:
         """
@@ -76,6 +81,6 @@ class Base(IOBase, ABC):
         args = options.pop("args", ())
         try:
             self.execute(*args, **options)
-        except InvalidCommandError as e:
-            self.error("%s: %s" % (e.__class__.__name__, e))
-            sys.exit(e.return_code)
+        except InvalidCommandError as error:
+            self.error(f"{error.__class__.__name__}: {error}")
+            sys.exit(error.return_code)
