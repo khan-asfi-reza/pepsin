@@ -47,8 +47,7 @@ def pip3_install(package: str) -> None:
     """
     Installs package via pip3
     """
-    python = sys.executable
-    subprocess.check_call([python, '-m', 'pip3', 'install', package])
+    subprocess.check_call(['pip3', 'install', package])
 
 
 def python_sys_execute(*command) -> None:
