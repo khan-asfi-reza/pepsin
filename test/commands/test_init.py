@@ -1,20 +1,31 @@
 import os
 from pathlib import Path
-from unittest import TestCase
+
+import pytest
+
 from pipcx.commands.init import Command as InitCommand
 import shutil
 
 
-class TestInit(TestCase):
+@pytest.fixture
+def init_command():
+    return InitCommand()
 
-    def setUp(self) -> None:
-        self.command = InitCommand()
-        self.path = Path(__file__).resolve().parent
 
-    def test_command(self):
-        os.chdir(path=self.path)
-        self.command.run(["pipcx", "init", "--venv=testvenv"])
-        self.assertEqual(os.path.isdir("testvenv"), True)
+@pytest.fixture
+def path():
+    path = Path(__file__).resolve().parent / 'temp'
+    os.chdir(path=path)
+    return path
 
-    def tearDown(self) -> None:
-        shutil.rmtree(os.path.join(self.path, 'testvenv'))
+
+def test_init_with_option_args(init_command, path):
+    init_command.run(["pipcx", "init", "--venv=testvenv"])
+    assert os.path.isdir("testvenv") is True
+    shutil.rmtree(path / 'testvenv')
+
+
+def test_init_with_var_arg(init_command, path):
+    init_command.run(["pipcx", "init", "testvenv"])
+    assert os.path.isdir("testvenv") is True
+    shutil.rmtree(path / 'testvenv')
