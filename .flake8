@@ -20,3 +20,4 @@ exclude =
     venv
     test
     *__init__.py
+    manual_testing
