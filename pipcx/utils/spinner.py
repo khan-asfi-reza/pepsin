@@ -30,8 +30,8 @@ class Sequence(Enum):
     LOSANGE = ['◇', '◈', '◆']
     BRAILLE = ['⣾', '⣽', '⣻', '⢿', '⡿', '⣟', '⣯', '⣷']
 
-    def describe(self):
-        return self.name, self.value
+    # def describe(self):
+    #     return self.name, self.value
 
     @classmethod
     def default_sequence(cls):
