@@ -1,3 +1,31 @@
+"""
+Init Command
+Usage:
+    `pipcx init`
+
+Generates a python boilerplate normal project along
+with virtual environment.
+
+`init` will prompt for 4 things such as
+1. project_name
+2. License
+3. Author
+4. Email
+
+and will create a project folder under the name
+`project_name`
+
+Optional Parameters:
+
+`pipcx init my_project`
+Will create project without asking for project_name
+
+`--venv=myVenv`
+Custom venv directory
+
+`--no-input`
+Will not take any input
+"""
 import os
 from argparse import ArgumentParser
 
@@ -7,7 +35,7 @@ from pipcx.utils import YamlConfigGenerator
 from pipcx.utils.spinner import Spinner
 from pipcx.utils.venv import install_venv, initialize_venv, activate_venv
 
-main_file = """
+MAIN_FILE = """
 # Generated with pipcx
 
 if __name__ == "__main__":
@@ -16,6 +44,9 @@ if __name__ == "__main__":
 
 
 def initialize_project_config(config: dict, **kwargs):
+    """
+    Creates base project config file and virtualenv
+    """
     venv_dir = kwargs.get("venv", "venv")
     conf_gen = YamlConfigGenerator("pipcx.yaml")
     config.update(venv=venv_dir)
@@ -31,9 +62,15 @@ def initialize_project_config(config: dict, **kwargs):
 
 
 class Command(Base):
+    """
+    Init command class
+    """
     short_description = "Initialize Virtual environment"
 
     def add_argument(self, parser: ArgumentParser):
+        """
+        Adds custom argument
+        """
         parser.add_argument(
             "project_name",
             nargs='?',
@@ -47,7 +84,14 @@ class Command(Base):
             '--venv', help="Virtual Environment directory name"
         )
 
+        parser.add_argument(
+            '--no-input', help="Will not take any input", action="store_true"
+        )
+
     def execute(self, *args, **kwargs):
+        """
+        Inherited execute method
+        """
         project_name = kwargs.get("project_name", None)
         spinner = Spinner()
         input_handler = PromptHandler()
@@ -90,13 +134,13 @@ class Command(Base):
         except FileExistsError:
             pass
 
-        with open(f"{project_name}/__init__.py", "w"):
+        with open(f"{project_name}/__init__.py", "w", encoding="utf-8"):
             pass
         working_dir = os.getcwd()
 
         if not os.path.exists(f"{working_dir}/{project_name}/main.py"):
-            with open(f"{project_name}/main.py", "w") as file:
-                file.write(main_file)
+            with open(f"{project_name}/main.py", "w", encoding="utf-8") as file:
+                file.write(MAIN_FILE)
 
         spinner.stop()
         self.output("\nProject initialization complete")

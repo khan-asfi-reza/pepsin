@@ -1,3 +1,6 @@
+"""
+Handles virtual environment related actions
+"""
 import enum
 import os
 from sys import platform
@@ -8,6 +11,9 @@ from pipcx.utils.base import pip3_install, python_sys_execute
 
 
 class OSEnum(enum.Enum):
+    """
+    OS Enum
+    """
     LINUX = 'linux'
     WIN = "win"
     OSX = "darwin"
@@ -17,12 +23,15 @@ def get_os(plt=platform) -> OSEnum:
     """
     Returns System OS Platform name
     """
-    if plt == "linux" or plt == "linux2":
-        return OSEnum.LINUX
+    __os = OSEnum.LINUX
+    if plt in ["linux", "linux2"]:
+        __os = OSEnum.LINUX
     elif plt == "darwin":
-        return OSEnum.OSX
-    elif plt == "win32" or plt == "cygwin":
-        return OSEnum.WIN
+        __os = OSEnum.OSX
+    elif plt in ["win32", "cygwin"]:
+        __os = OSEnum.WIN
+
+    return __os
 
 
 def install_venv() -> None:
