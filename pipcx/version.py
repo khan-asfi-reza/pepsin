@@ -1,2 +1,11 @@
+"""
+Returns version of the package
+"""
+VERSION = '1.0.0'
+
+
 def get_version():
-    return '1.0.1'
+    """
+    Returns version of the package
+    """
+    return VERSION

@@ -4,7 +4,8 @@
         <img src="https://github.com/khan-asfi-reza/pipcx/actions/workflows/development.yaml/badge.svg" alt="">
         <img src="https://codecov.io/gh/khan-asfi-reza/pipcx/branch/master/graph/badge.svg?token=BS5ZJN8ZRI" alt="">
         <img src="https://img.shields.io/badge/code%20style-pep8-orange.svg" alt="">
-    </div>
+        <img src="https://img.shields.io/badge/linting-pylint-green" alt="">    
+</div>
 </div>
 
 #### Python Project Initializer CLI Tool, uses pip 

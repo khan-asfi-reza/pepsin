@@ -1,3 +1,6 @@
+"""
+Contains Base utility that is required to run the pipcx CLI Class
+"""
 import functools
 import os
 import pkgutil
@@ -39,7 +42,7 @@ def get_commands():
     Set of commands that will be returned
     :return: set of commands
     """
-    commands = {name for name in find_commands()}
+    commands = set(find_commands())
     return commands
 
 

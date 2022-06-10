@@ -1,3 +1,18 @@
+"""
+A module for input output handling,
+1. ```OutputWrapper```:
+    Handles system standard output, helps to write text
+    in the cli and show errors
+2. ```IOBase```:
+    Is a superclass for Command Classes, that will have
+    direct access to the output and error method to show text
+    in the cli
+3. ```Input```:
+    Modified `builtins.input` class to obtain proper modified
+    data from the cli
+4. ```PromptHandler```:
+    Handles multiple `Input` and obtain answers and organizes it
+"""
 import dataclasses
 import sys
 from collections import namedtuple
@@ -19,7 +34,7 @@ class OutputWrapper(TextIOBase):
         if hasattr(self._out, "flush"):
             self._out.flush()
 
-    def write(self, msg="", style_func=None, ending=None):
+    def write(self, msg="", ending=None):
         ending = self.ending if ending is None else ending
         if ending and not msg.endswith(ending):
             msg += ending
@@ -84,7 +99,8 @@ class Input:
 
     def input_title(self) -> str:
         """
-        Input prompt title
+        This method returns The prompt string,
+        that will be printed along with input
         """
         title = self.title
         if self.type is bool:
@@ -101,41 +117,41 @@ class Input:
         return title
 
     def prompt(self) -> Union[bool, None, int, str]:
+        """
+        Read a string from standard input. Then input data
+        is fixed and converted to certain data type given by
+        `Input.type`
+        """
         while True:
             title = self.input_title()
             inp = input(title)
-
-            if not self.required and not inp:
-                # If the input is required and has default then return default data
-                if self.default:
-                    return self.default
-                # If type is bool then send false else send none
-                return False if self.type is bool else None
+            __final = self.default
+            __final = inp if inp else __final
 
             if self.type is int and inp.isdigit():
                 data = int(inp)
                 if self.options and 0 <= data <= len(self.options):
                     # Option to select and return
-                    return self.options[data - 1]
+                    __final = self.options[data - 1]
                 elif not self.options:
-                    return data
+                    __final = data
                 else:
                     continue
 
-            if self.type is bool:
-                if inp.lower() in ['1', 'y']:
-                    return True
-                else:
-                    return False
-
-            if inp:
-                return inp
+            return inp.lower() in ['1', 'y'] if self.type is bool else __final
 
     def prompt_as_dict(self):
+        """
+        Returns input in dictionary format
+        """
         return {self.name: self.prompt()}
 
 
 class PromptHandler:
+    """
+    Handles group of input together and stores in the object in
+    multiple form
+    """
     __inputs: List[Input] = []
     __answers = {}
 
@@ -146,15 +162,32 @@ class PromptHandler:
         return len(self.__inputs)
 
     def is_prompt_complete(self):
+        """
+        Checks if input has been taken from cli
+        """
         return len(self.__answers) > 0
 
     def add_input(self, _input: Input):
+        """
+        Add one input in the prompt list, that will be
+        executed serially
+        _input: `Input` Object
+        """
         self.__inputs.append(_input)
 
     def add_inputs(self, *inputs):
+        """
+        Add multiple input in the prompt list, that will be
+        executed serially
+        inputs: List of `Input` Object
+        """
         self.__inputs += list(inputs)
 
     def prompt(self):
+        """
+        Get input from all the given Input Object
+        returns: Dictionary of answers
+        """
         for inp in self.__inputs:
             self.__answers.update(**inp.prompt_as_dict())
 
@@ -162,4 +195,7 @@ class PromptHandler:
 
     @property
     def answers(self):
+        """
+        Returns answer in Class Object Form
+        """
         return namedtuple("Answer", self.__answers.keys())(*self.__answers.values())

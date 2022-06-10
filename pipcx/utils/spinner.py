@@ -35,7 +35,10 @@ class Sequence(Enum):
 
     @classmethod
     def default_sequence(cls):
-        return Sequence.BASIC
+        """
+        Returns default sequence
+        """
+        return Sequence.HORIZ_BAR
 
 
 class Spinner:
@@ -52,6 +55,9 @@ class Spinner:
 
     @staticmethod
     def set_spinner_seq(sequence):
+        """
+        Sets spinner sequence from the Enum
+        """
         seq_list = [name for name, members in Sequence.__members__.items()]
         if sequence.upper() in seq_list:
             seq = Sequence[sequence.upper()].value
@@ -60,21 +66,29 @@ class Spinner:
         return seq
 
     def start(self):
+        """
+        Starts spinning action
+        """
         self.spin_thread.start()
 
     def stop(self):
+        """
+        Stops spinning action
+        """
         self.stop_running.set()
         self.spin_thread.join()
         # make sure to clear the line in case printing something shorter after
         sys.stdout.write("\033[K")
 
     def init_spin(self):
+        """
+        Initialize Spinner spin
+        """
         while not self.stop_running.is_set():
             if not self.message:
                 cur_mess = next(self.spinner_cycle)
             else:
-                cur_mess = "{} {}".format(next(self.spinner_cycle),
-                                          self.message)
+                cur_mess = f"{next(self.spinner_cycle)} {self.message}"
             cur_mess = cur_mess.rjust(len(cur_mess) + self.offset, ' ')
             sys.stdout.write(cur_mess)
             sys.stdout.flush()
