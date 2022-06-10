@@ -11,9 +11,9 @@ class CLI(IOBase):
     """
     CLI Class that will run the execute command
     """
-    def __init__(self):
+    def __init__(self, argv=None):
         super().__init__()
-        self.argv = sys.argv[:]
+        self.argv = sys.argv[:] if not argv else argv
         self.program_name = os.path.basename(self.argv[0])
 
         if self.program_name == "__main__.py":
@@ -53,13 +53,12 @@ class CLI(IOBase):
     def execute(self):
         if self.command in ['--help', '-h', 'help']:
             self.output(self.print_help())
+        if self.command == '--version' or self.argv[1:] == '--version':
+            self.output(get_version() + "\n")
         else:
             try:
                 command_class = load_command_class(self.command)
-                if self.argv[1:] == '--version':
-                    self.output(get_version() + "\n")
-                else:
-                    command_class.run(self.argv)
+                command_class.run(self.argv)
             except ModuleNotFoundError as e:
                 self.error(f"`{e.name.split('.')[-1]}` Command not available")
                 self.error(COMMAND_NOT_FOUND_ERROR)
