@@ -1,6 +1,9 @@
+from collections import deque
+
 import pytest
 
 from pipcx.io import Input, IOBase
+from test.utils import make_multiple_inputs
 
 
 @pytest.fixture
@@ -44,6 +47,16 @@ def test_input_options(monkeypatch):
     assert int_input.prompt_as_dict() == {'name': 'option 2'}
 
 
+def test_input_options_skip(monkeypatch):
+    """
+    Test Input Type Options
+    """
+    monkeypatch.setattr('builtins.input',  make_multiple_inputs(
+        deque(["5", "1", ])))
+    int_input = Input(name="name", type=int, title="title", options=['option 1', 'option 2'])
+    assert int_input.prompt_as_dict() == {'name': 'option 1'}
+
+
 def test_input_str_skip(monkeypatch):
     """
     Test input skip while type string
@@ -57,7 +70,7 @@ def test_input_bool_skip(monkeypatch):
     """
     Test input skip while type boolean
     """
-    monkeypatch.setattr('builtins.input', lambda _: '')
+    monkeypatch.setattr('builtins.input', lambda _: 'n')
     string_input = Input(name="name", type=bool, title="title", required=False)
     assert string_input.prompt_as_dict() == {'name': False}
 
