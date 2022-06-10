@@ -72,15 +72,25 @@ def test_pip3_install(monkeypatch):
 
 
 def test_sys_platform():
+    # Test Linux system
     platform_os = get_os("linux")
     assert platform_os == OSEnum.LINUX
-
+    # Test windows system
     platform_os = get_os("darwin")
     assert platform_os == OSEnum.OSX
+    # Test windows system
+    platform_os = get_os("win32")
+    assert platform_os == OSEnum.WIN
 
 
-def test_activate_venv(monkeypatch):
+def test_activate_venv_linux(monkeypatch):
     monkeypatch.setattr("pipcx.utils.venv.get_os", lambda: OSEnum.LINUX)
+    monkeypatch.setattr("os.system", lambda _: _)
+    activate_venv("test")
+
+
+def test_activate_venv_windows(monkeypatch):
+    monkeypatch.setattr("pipcx.utils.venv.get_os", lambda: OSEnum.WIN)
     monkeypatch.setattr("os.system", lambda _: _)
     activate_venv("test")
 
