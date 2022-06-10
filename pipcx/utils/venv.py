@@ -13,15 +13,15 @@ class OSEnum(enum.Enum):
     OSX = "darwin"
 
 
-def get_os() -> OSEnum:
+def get_os(plt=platform) -> OSEnum:
     """
     Returns System OS Platform name
     """
-    if platform == "linux" or platform == "linux2":
+    if plt == "linux" or plt == "linux2":
         return OSEnum.LINUX
-    elif platform == "darwin":
+    elif plt == "darwin":
         return OSEnum.OSX
-    elif platform == "win32" or platform == "cygwin":
+    elif plt == "win32" or plt == "cygwin":
         return OSEnum.WIN
 
 
