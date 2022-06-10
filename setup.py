@@ -4,6 +4,14 @@ from setuptools import setup, find_packages
 with open("./README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
+
+def read_requirements():
+    with open("./requirements.txt", "r") as req:
+        content = req.read()
+        requirements = content.split("\n")
+    return requirements
+
+
 VERSION = version.get_version()
 
 setup(
@@ -21,7 +29,7 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-
+    install_requires=read_requirements(),
     entry_points='''
         [console_scripts]
         pipcx=pipcx.main:main
