@@ -65,5 +65,6 @@ def test_dict_to_yaml_config_loader(path):
 
 def test_empty_yaml(path):
     conf = YAMLConfig()
+    conf.read_from_yaml()
     assert len(conf.get_config()) == 2
     assert conf.get_filename() == 'temp.yaml'
