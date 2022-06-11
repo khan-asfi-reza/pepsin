@@ -61,3 +61,9 @@ def test_dict_to_yaml_config_loader(path):
     _copy = conf.get_config()
     assert id(_con) != id(_copy)
     os.remove("pytest.yaml")
+
+
+def test_empty_yaml(path):
+    conf = YAMLConfig()
+    assert len(conf.get_config()) == 2
+    assert conf.get_filename() == 'temp.yaml'
