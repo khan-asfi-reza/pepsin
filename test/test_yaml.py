@@ -4,7 +4,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-from pipcx.utils import yaml_to_dict, dict_to_yaml, YamlConfigLoader, YamlConfigGenerator
+from pipcx.utils import yaml_to_dict, dict_to_yaml, YAMLConfig
 
 
 @pytest.fixture
@@ -37,18 +37,17 @@ def test_load_dict_to_yaml(path):
 
 
 def test_yaml_config_loader(path):
-    Config = YamlConfigLoader("test.yaml").get_config()
-    assert Config.name == "Pipcx"
+    Config = YAMLConfig("test.yaml")
+    assert Config.get("name") == "Pipcx"
 
 
 def test_dict_to_yaml_config_loader(path):
-    conf = YamlConfigGenerator("pytest.yaml")
+    conf = YAMLConfig("pytest.yaml")
     conf.append(name="Pipcx")
     conf.append(number=12)
-    assert conf.read().get("name") == "Pipcx"
+    assert conf.get("name") == "Pipcx"
     conf.remove("number")
-    assert conf.read().get("number", None) is None
-    conf.generate()
-    Config = YamlConfigLoader("pytest.yaml").get_config()
-    assert Config.name == "Pipcx"
+    assert conf.get("number") is None
+    conf.save()
+    assert conf.get("name") == "Pipcx"
     os.remove("pytest.yaml")

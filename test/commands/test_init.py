@@ -39,6 +39,7 @@ def safe_remove_file(file_path):
 
 @pytest.fixture(autouse=True)
 def run_around_tests():
+    yield
     path = Path(__file__).resolve().parent / 'temp'
     os.chdir(path=path)
     safe_remove_dir("testproject")

@@ -3,7 +3,7 @@ Handles Yaml Config and converts from yaml to dictionary or
 dictionary to yaml
 """
 import copy
-from collections import namedtuple
+import os
 
 import yaml
 
@@ -27,45 +27,41 @@ def yaml_to_dict(filename) -> dict:
         return yaml.load(file, yaml.Loader)
 
 
-class YamlConfigLoader:
+class YAMLConfig:
     """
-    Yaml Config Loader loads config data from a yaml file
-    """
-    __config_dict = {}
-
-    def __init__(self, filename):
-        self.filename = filename
-        self.load()
-        self.config = namedtuple("Config", self.__config_dict.keys())(*self.__config_dict.values())
-
-    def get_config(self):
-        """
-        Returns config
-        """
-        return self.config
-
-    def load(self):
-        """
-        Loads yaml file
-        """
-        self.__config_dict = yaml_to_dict(self.filename)
-
-
-class YamlConfigGenerator:
-    """
-    Yaml Config Generator generates yaml file
+    Yaml Model controller
     """
     __config = {}
+    __filename = ""
 
-    def __init__(self, filename, **config):
-        self.filename = filename
-        self.__config = config
+    def __init__(self, filename="temp.yaml", **kwargs):
+        self.__filename = filename
+        self.__read_yaml()
+        self.append(**kwargs)
 
-    def append(self, **config_data):
+    def __read_yaml(self):
         """
-        Appends data in the config dictionary
+        Reads yaml file
         """
-        self.__config.update(**config_data)
+        if os.path.isfile(self.__filename):
+            yaml_data = yaml_to_dict(self.__filename)
+            self.append(**yaml_data)
+
+    def read_from_yaml(self):
+        """
+        Reads directly from yaml file
+        """
+        if os.path.isfile(self.__filename):
+            return yaml_to_dict(self.__filename)
+        return self.__config
+
+    def append(self, **kwargs):
+        """
+        Inserts config data in the config dictionary
+        """
+        self.__config.update(**kwargs)
+        for key, val in self.__config.items():
+            setattr(self, key, val)
 
     def remove(self, key):
         """
@@ -73,14 +69,27 @@ class YamlConfigGenerator:
         """
         return self.__config.pop(key)
 
-    def read(self):
+    def get(self, key):
         """
-        Create copy of config
+        Gets config using key
+        """
+        return self.__config.get(key, None)
+
+    def get_config(self):
+        """
+        Returns the config
         """
         return copy.deepcopy(self.__config)
 
-    def generate(self):
+    def get_filename(self):
         """
-        Generates yaml file
+        Returns the filename
         """
-        dict_to_yaml(self.__config, self.filename)
+        return self.__filename
+
+    def save(self):
+        """
+        Saves config in the yaml file
+        """
+        dict_to_yaml(self.__config, self.__filename)
+        return self.__config
