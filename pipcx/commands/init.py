@@ -31,7 +31,7 @@ from argparse import ArgumentParser
 
 from pipcx.base import Base
 from pipcx.io import PromptHandler, Input
-from pipcx.utils import YamlConfigGenerator
+from pipcx.utils import YAMLConfig
 from pipcx.utils.spinner import Spinner
 from pipcx.utils.venv import install_venv, initialize_venv, activate_venv
 
@@ -48,10 +48,9 @@ def initialize_project_config(config: dict, **kwargs):
     Creates base project config file and virtualenv
     """
     venv_dir = kwargs.get("venv", "venv")
-    conf_gen = YamlConfigGenerator("pipcx.yaml")
-    config.update(venv=venv_dir)
-    conf_gen.append(**config)
-    conf_gen.generate()
+    conf_gen = YAMLConfig("pipcx.yaml", **config)
+    conf_gen.append(venv=venv_dir)
+    conf_gen.save()
     # Installs virtualenv library
     install_venv()
     # Initializes virtualenv
