@@ -14,6 +14,7 @@ class CLI(IOBase):
     """
     CLI Class that will run the execute command
     """
+
     def __init__(self, argv=None):
         super().__init__()
         self.argv = sys.argv[:] if not argv else argv
