@@ -7,7 +7,7 @@ from argparse import ArgumentParser
 from typing import Union
 
 from pipcx.error import InvalidCommandError
-from pipcx.io import IOBase
+from pipcx.io import IOBase, InputHandler
 from pipcx.version import get_version
 
 
@@ -39,6 +39,25 @@ class Base(IOBase, ABC):
     help = ''
     short_description = ''
 
+    def __init__(self):
+        self.input_handler: InputHandler = InputHandler()
+        super().__init__()
+
+    def add_input(self, handler, **options):
+        """
+        Adds input - Superclass
+        """
+
+    def handle_input(self, **options):
+        """
+        Input handler function
+        """
+        if options.get("no_input"):
+            return
+
+        self.add_input(self.input_handler, **options)
+        self.input_handler.prompt()
+
     def get_parser(self, program_name: str, command: str) -> ArgumentParser:
         """
         Creates Argument Parser Class Object, add 'version' argument
@@ -50,6 +69,10 @@ class Base(IOBase, ABC):
             "--version",
             action="version",
             version=get_version(),
+        )
+        parser.add_argument(
+            '--no-input',
+            action="store_true"
         )
         # Subclass custom arguments will be added via this method
         self.add_argument(parser)
@@ -66,8 +89,14 @@ class Base(IOBase, ABC):
         Subclass custom arguments will be added via this method
         """
 
+    def format_arguments(self, **kwargs):
+        """
+        Format Arguments
+        """
+        return kwargs
+
     @abstractmethod
-    def execute(self, *args, **kwargs) -> Union[None, str]:
+    def execute(self, **command_data) -> Union[None, str]:
         """
         Main logic of the subclass
         """
@@ -77,10 +106,14 @@ class Base(IOBase, ABC):
         Runner method for command class
         """
         parser = self.get_parser(program_name=argv[0], command=argv[1])
-        options = vars(parser.parse_args(argv[2:]))
-        args = options.pop("args", ())
+        data = vars(parser.parse_args(argv[2:]))
+        args = data.pop("args", ())
         try:
-            self.execute(*args, **options)
+            self.handle_input(**data)
+            data.update(**self.input_handler.get_answers())
+            data = self.format_arguments(**data)
+            data.pop("no_input")
+            self.execute(*args, **data)
         except InvalidCommandError as error:
             self.error(f"{error.__class__.__name__}: {error}")
             sys.exit(error.return_code)
