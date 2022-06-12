@@ -147,7 +147,7 @@ class Input:
         return {self.name: self.prompt()}
 
 
-class PromptHandler:
+class InputHandler:
     """
     Handles group of input together and stores in the object in
     multiple form
@@ -183,13 +183,26 @@ class PromptHandler:
         """
         self.__inputs += list(inputs)
 
+    def get_answers(self):
+        """
+        Returns answers in dict format
+        """
+        return self.__answers
+
+    def get(self, key):
+        """
+        Returns one answer using key
+        """
+        return self.__answers.get(key, None)
+
     def prompt(self):
         """
         Get input from all the given Input Object
         returns: Dictionary of answers
         """
         for inp in self.__inputs:
-            self.__answers.update(**inp.prompt_as_dict())
+            data = inp.prompt_as_dict()
+            self.__answers.update(**data)
 
         return self.__answers
 

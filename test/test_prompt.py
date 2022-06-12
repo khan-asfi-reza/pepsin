@@ -1,11 +1,11 @@
 import pytest
 
-from pipcx.io import PromptHandler, Input
+from pipcx.io import InputHandler, Input
 
 
 @pytest.fixture
 def prompt_handler():
-    return PromptHandler()
+    return InputHandler()
 
 
 def test_prompt_handler(prompt_handler, monkeypatch):
