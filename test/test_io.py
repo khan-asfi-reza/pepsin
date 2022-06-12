@@ -52,7 +52,7 @@ def test_input_options_skip(monkeypatch):
     Test Input Type Options
     """
     monkeypatch.setattr('builtins.input',  make_multiple_inputs(
-        deque(["5", "1", ])))
+        ["5", "1", ]))
     int_input = Input(name="name", type=int, title="title", options=['option 1', 'option 2'])
     assert int_input.prompt_as_dict() == {'name': 'option 1'}
 
