@@ -60,6 +60,13 @@ def test_spinner():
     assert 1
 
 
+def test_default_spinner():
+    spinner = Spinner()
+    spinner.start()
+    spinner.stop()
+    assert 1
+
+
 def check_all(lst=None):
     pass
 
