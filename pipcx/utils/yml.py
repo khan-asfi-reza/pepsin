@@ -15,7 +15,7 @@ def dict_to_yaml(_dict, filename):
     filename: Name of yaml file
     """
     with open(filename, "w", encoding="utf-8") as file:
-        yaml.dump(_dict, file)
+        yaml.dump(_dict, file, sort_keys=False)
 
 
 def yaml_to_dict(filename) -> dict:
@@ -31,10 +31,10 @@ class YAMLConfig:
     """
     Yaml Model controller
     """
-    __config = {}
-    __filename = ""
 
     def __init__(self, filename="temp.yaml", **kwargs):
+        self.__config = {}
+        self.__filename = ""
         self.__filename = filename
         self.__read_yaml()
         self.append(**kwargs)
