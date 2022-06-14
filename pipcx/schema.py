@@ -19,7 +19,13 @@ class PipcxConfig:
     """
     PIPCX Config blueprint
     """
-    __slots__ = ["name", "venv", "author", "license", "libraries", "scripts"]
+    __slots__ = ["name",
+                 "venv",
+                 "author",
+                 "license",
+                 "libraries",
+                 "scripts"]
+
     conf = YAMLConfig("pipcx.yaml")
 
     def __init__(self):
@@ -57,12 +63,11 @@ class PipcxConfig:
             # Remove 'lib==2.3.4'
             # Add 'lib==2.3.5'
             # Split using '==' and match first 2 string
+            for conf_lib in self.libraries:
+                if lib.split("==")[0] in conf_lib.split("==")[0]:
+                    index = self.libraries.index(conf_lib)
+                    del self.libraries[index]
 
-            if self.libraries:
-                for conf_lib in self.libraries:
-                    if lib.split("==")[0] in conf_lib.split("==")[0]:
-                        index = self.libraries.index(conf_lib)
-                        del self.libraries[index]
             self.libraries.append(lib)
 
     def format_config(self):
