@@ -1,4 +1,4 @@
-# $project_name
+# $name
 
 #### Generated via Pipcx
 
