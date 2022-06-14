@@ -32,6 +32,7 @@ from argparse import ArgumentParser
 from pipcx.base import Base
 from pipcx.io import Input
 from pipcx.schema import get_project_name, initialize_project_config
+from pipcx.template import Template, TemplateList
 
 MAIN_FILE = ""
 """# Generated with pipcx
@@ -110,12 +111,11 @@ class Command(Base):
         kwargs.update(name=project_name)
         return kwargs
 
-    @staticmethod
-    def handle_directory(**kwargs):
+    def handle_directory(self):
         """
         Handle directory creation
         """
-        project_name = kwargs.get("name")
+        project_name = self.command_data.get("name")
         try:
             os.mkdir(project_name)
         except FileExistsError:
@@ -129,11 +129,20 @@ class Command(Base):
             with open(f"{project_name}/main.py", "w", encoding="utf-8") as file:
                 file.write(MAIN_FILE)
 
-    def execute(self, **command_data):
+    def add_templates(self, template_list: TemplateList):
+        """
+        Adds custom template
+        """
+        template_list.add_template(
+            Template(template_name=".gitignore"),
+            Template(template_name="Readme.MD", context={"name": self.command_data.get("name")})
+        )
+
+    def execute(self):
         """
         Inherited execute method
         """
-        initialize_project_config(**command_data)
+        initialize_project_config(**self.command_data)
         # Installs virtualenv library
-        self.handle_directory(**command_data)
+        self.handle_directory()
         self.output("\nProject initialization complete")
