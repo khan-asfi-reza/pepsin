@@ -8,6 +8,7 @@ from typing import Union
 
 from pipcx.error import InvalidCommandError
 from pipcx.io import IOBase, InputHandler
+from pipcx.template import TemplateList
 from pipcx.version import get_version
 
 
@@ -41,6 +42,9 @@ class Base(IOBase, ABC):
 
     def __init__(self):
         self.input_handler: InputHandler = InputHandler()
+        self.templates: TemplateList = TemplateList()
+        self.command_data = {}
+        self.command_args = None
         super().__init__()
 
     def add_input(self, handler, **options):
@@ -95,8 +99,20 @@ class Base(IOBase, ABC):
         """
         return kwargs
 
+    def add_templates(self, template_list):
+        """
+        Subclass templates will be added
+        """
+
+    def handle_template(self):
+        """
+        Handles all template
+        """
+        self.add_templates(self.templates)
+        self.templates.save()
+
     @abstractmethod
-    def execute(self, **command_data) -> Union[None, str]:
+    def execute(self) -> Union[None, str]:
         """
         Main logic of the subclass
         """
@@ -105,15 +121,21 @@ class Base(IOBase, ABC):
         """
         Runner method for command class
         """
+        # Get the parser to get cli arguments and process
         parser = self.get_parser(program_name=argv[0], command=argv[1])
         data = vars(parser.parse_args(argv[2:]))
         args = data.pop("args", ())
+        # Handle inputs from the cli
+        self.handle_input(**data)
+        # Format all inputs
+        data.update(**self.input_handler.get_answers())
+        data = self.format_arguments(**data)
+        data.pop("no_input")
+        self.command_data = data
+        self.command_args = args
         try:
-            self.handle_input(**data)
-            data.update(**self.input_handler.get_answers())
-            data = self.format_arguments(**data)
-            data.pop("no_input")
-            self.execute(*args, **data)
+            self.execute()
+            self.handle_template()
         except InvalidCommandError as error:
             self.error(f"{error.__class__.__name__}: {error}")
             sys.exit(error.return_code)
