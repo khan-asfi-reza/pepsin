@@ -2,7 +2,7 @@ from collections import deque
 
 import pytest
 
-from pipcx.io import Input, IOBase
+from pipcx.io import Input, IOBase, Output
 from test.utils import make_multiple_inputs
 
 
@@ -51,7 +51,7 @@ def test_input_options_skip(monkeypatch):
     """
     Test Input Type Options
     """
-    monkeypatch.setattr('builtins.input',  make_multiple_inputs(
+    monkeypatch.setattr('builtins.input', make_multiple_inputs(
         ["5", "1", ]))
     int_input = Input(name="name", type=int, title="title", options=['option 1', 'option 2'])
     assert int_input.prompt_as_dict() == {'name': 'option 1'}
@@ -82,6 +82,15 @@ def test_input_default(monkeypatch):
     monkeypatch.setattr('builtins.input', lambda _: '')
     string_input = Input(name="name", type=str, default='value', title="title", required=False)
     assert string_input.prompt_as_dict() == {'name': 'value'}
+
+
+def test_output(capsys):
+    """
+    Test output
+    """
+    output = Output(title="Title", name="Name")
+    output.prompt()
+    assert "Title" in capsys.readouterr().out
 
 
 def test_io_base(io_base):

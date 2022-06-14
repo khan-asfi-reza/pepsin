@@ -13,6 +13,7 @@ A module for input output handling,
 4. ```PromptHandler```:
     Handles multiple `Input` and obtain answers and organizes it
 """
+import abc
 import dataclasses
 import sys
 from collections import namedtuple
@@ -76,7 +77,51 @@ class IOBase:
 
 
 @dataclasses.dataclass
-class Input:
+class CLIIOBase(abc.ABC):
+    """
+    CLI Input or output base
+    """
+    name: str
+    title: str
+
+    @abc.abstractmethod
+    def prompt(self) -> Union[bool, None, int, str]:
+        """
+        Read a string from standard input. Then input data
+        is fixed and converted to certain data type given by
+        `Input.type` or Prints out statement
+        """
+
+    @abc.abstractmethod
+    def prompt_as_dict(self):
+        """
+        Returns prompt data dictionary
+        """
+
+
+@dataclasses.dataclass
+class Output(IOBase, CLIIOBase):
+    """
+    Outputs a title while scanning input from the cli
+    """
+    def __post_init__(self):
+        self.output = OutputWrapper(sys.stdout)
+
+    def prompt_as_dict(self):
+        """
+        Returns empty dictionary
+        """
+        return {}
+
+    def prompt(self):
+        """
+        Outputs title in the cli
+        """
+        self.output.write(self.title)
+
+
+@dataclasses.dataclass
+class Input(CLIIOBase):
     """
     params:
         name: str | Name of the input
@@ -86,8 +131,6 @@ class Input:
         required: bool | Is the input required or skip-able
         options: list | Available option list
     """
-    name: str
-    title: str
     type: type = str
     default: Union[str, int, bool, None] = None
     required: bool = True

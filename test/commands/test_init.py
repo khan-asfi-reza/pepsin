@@ -6,7 +6,7 @@ import pytest
 
 from pipcx.commands.init import Command as InitCommand
 from pipcx.main import CLI
-from test.utils import make_multiple_inputs, safe_remove_dir, safe_remove_file
+from test.utils import make_multiple_inputs, safe_remove_dir
 
 
 @pytest.fixture
@@ -18,6 +18,8 @@ def init_command():
 def path():
     path = Path(__file__).resolve().parent / 'temp'
     os.chdir(path=path)
+    os.mkdir("__TEST__")
+    os.chdir(path=path / "__TEST__")
     return path
 
 
@@ -26,10 +28,7 @@ def run_around_tests():
     yield
     path = Path(__file__).resolve().parent / 'temp'
     os.chdir(path=path)
-    safe_remove_dir("testproject")
-    safe_remove_dir("testvenv")
-    safe_remove_file("pipcx.yaml")
-    safe_remove_file("pytest.yaml")
+    safe_remove_dir("__TEST__")
 
 
 def test_init_with_option_args(init_command, path, monkeypatch):
@@ -43,13 +42,11 @@ def test_init_with_option_args(init_command, path, monkeypatch):
     assert os.path.isdir("testproject")
     assert os.path.isfile("pipcx.yaml")
     assert os.path.isfile("testproject/main.py")
-    # Remove test files
-    shutil.rmtree(path / 'testvenv')
-    shutil.rmtree(path / 'testproject')
-    os.remove("pipcx.yaml")
+    assert os.path.isfile("Readme.MD")
+    assert os.path.isfile(".gitignore")
 
 
-def test_init_with_predefined_files(path, init_command, monkeypatch):
+def test_init_with_predefined_files_no_input(path, init_command, monkeypatch):
     cli = CLI(["pipcx", "init", "testproject", "--venv=testvenv", "--no-input"])
     # Set input parameter
     os.mkdir("testproject")
@@ -63,17 +60,15 @@ def test_init_with_predefined_files(path, init_command, monkeypatch):
     assert os.path.isdir("testproject")
     assert os.path.isfile("pipcx.yaml")
     assert os.path.isfile("testproject/main.py")
+    assert os.path.isfile("Readme.MD")
+    assert os.path.isfile(".gitignore")
     # Read if file has not been updated
     with open("testproject/main.py", "r") as file:
         assert "Hello World" in file.read()
         file.close()
-    # Remove test files
-    shutil.rmtree(path / 'testvenv')
-    shutil.rmtree(path / 'testproject')
-    os.remove("pipcx.yaml")
 
 
-def test_init_with_predefined_files2(path, monkeypatch):
+def test_init_with_predefined_files(path, monkeypatch):
     cli = CLI(["pipcx", "init", "testproject", "--venv=testvenv"])
     # Set input parameter
     monkeypatch.setattr("builtins.input", make_multiple_inputs(
@@ -89,12 +84,10 @@ def test_init_with_predefined_files2(path, monkeypatch):
     assert os.path.isdir("testvenv")
     assert os.path.isdir("testproject")
     assert os.path.isfile("pipcx.yaml")
+    assert os.path.isfile("Readme.MD")
+    assert os.path.isfile(".gitignore")
     assert os.path.isfile("testproject/main.py")
     # Read if file has not been updated
     with open("testproject/main.py", "r") as file:
         assert "Hello World" in file.read()
         file.close()
-    # Remove test files
-    shutil.rmtree(path / 'testvenv')
-    shutil.rmtree(path / 'testproject')
-    os.remove("pipcx.yaml")
