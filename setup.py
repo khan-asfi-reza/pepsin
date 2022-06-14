@@ -30,6 +30,10 @@ setup(
         "Operating System :: OS Independent",
     ],
     install_requires=read_requirements(),
+    package_data={"": [
+        'pipcx/templates',
+        'pipcx/templates/*', ]
+    },
     entry_points='''
         [console_scripts]
         pipcx=pipcx.main:main
