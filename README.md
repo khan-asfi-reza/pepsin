@@ -28,9 +28,11 @@ So primary goal is to -
 4. File generation based on templates (tox, pytest)
 5. Dockerizing and customization hook
 
-The way of writing code is heavily inspired by `django.core.management`
-This project implements almost the similar strategy in terms of process and code writing.
-The main target is not to use any external tools to create a cli program
+Pipcx's code structure is heavily inspired by `django.core.management`
+pipcx implements almost the similar strategy of code writing and work process.
+Pipcx cli library is written using builtin libraries like `argparse` `importlib` `pkgutil` `sys` `os` etc.
+For storing libraries and managing dependencies, `yaml` file has been selected 
+as it has a very basic and minimalistic syntax. 
 
 
 ### Requirements
