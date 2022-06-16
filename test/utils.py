@@ -1,5 +1,21 @@
 import os
 import shutil
+from pathlib import Path
+
+import pytest
+
+
+@pytest.fixture(autouse=True)
+def command_path():
+    path = Path(__file__).resolve().parent / 'temp'
+    os.chdir(path=path)
+    os.mkdir("__TEST__")
+    os.chdir(path=path / "__TEST__")
+    yield
+    os.chdir(path=path)
+    safe_remove_dir("__TEST__")
+    safe_remove_dir("venv")
+    safe_remove_dir("pipcx.yaml")
 
 
 def make_multiple_inputs(inputs: list):
@@ -25,3 +41,9 @@ def safe_remove_file(file_path):
     except FileNotFoundError:
         pass
 
+
+@pytest.fixture
+def temp_path():
+    path = Path(__file__).resolve().parent / 'temp'
+    os.chdir(path=path)
+    return path

@@ -59,3 +59,44 @@ def python_sys_execute(*command) -> None:
     """
     python = sys.executable
     subprocess.check_call([python, '-m', *command])
+
+
+def check_file_exists(file):
+    """
+    Checks if file exists in working directory
+    """
+    return os.path.isfile(os.path.join(os.getcwd(), file))
+
+
+def get_default(target, replace):
+    """
+    Checks if something is null or empty otherwise return the replacement
+    """
+    return replace if not target else target
+
+
+def read_file(file):
+    """
+    Safely read File and return text
+    """
+    try:
+        with open(file, "r", encoding="utf-8") as file:
+            return file.read()
+    except FileNotFoundError:
+        return ""
+
+
+def write_file(file, text):
+    """
+    Safely write file
+    """
+    with open(file, "w", encoding="utf-8") as file:
+        return file.write(text)
+
+
+def update_file(file, text):
+    """
+    Safely updates a file
+    """
+    read_text = read_file(file)
+    write_file(file, read_text + '\n' + text)

@@ -104,6 +104,7 @@ class Output(IOBase, CLIIOBase):
     """
     Outputs a title while scanning input from the cli
     """
+
     def __post_init__(self):
         self.output = OutputWrapper(sys.stdout)
 
@@ -111,6 +112,7 @@ class Output(IOBase, CLIIOBase):
         """
         Returns empty dictionary
         """
+        self.prompt()
         return {}
 
     def prompt(self):
@@ -195,11 +197,10 @@ class InputHandler:
     Handles group of input together and stores in the object in
     multiple form
     """
-    __inputs: List[Input] = []
-    __answers = {}
 
     def __init__(self, *inputs):
         self.__inputs = [*inputs]
+        self.__answers = {}
 
     def __len__(self):
         return len(self.__inputs)

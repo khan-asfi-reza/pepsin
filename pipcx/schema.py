@@ -1,7 +1,8 @@
 """
 Pipcx config module
 """
-from pipcx.utils import YAMLConfig, install_venv, initialize_venv, activate_venv
+
+from pipcx.utils import YAMLConfig, install_venv, initialize_venv, activate_venv, check_file_exists
 
 
 def get_project_name(**kwargs):
@@ -13,6 +14,31 @@ def get_project_name(**kwargs):
         return kw_proj_name
 
     return "src"
+
+
+def format_attr(attr):
+    """
+    Formats attribute and return empty string if Null
+    """
+    return '' if not attr else attr
+
+
+def initialize_project_config(**kwargs):
+    """
+    Creates base project config file and virtualenv
+    """
+    # Create PipCX Config
+    config = PipcxConfig()
+    # Generate yaml file 'pipcx.yaml'
+    config.update(**kwargs)
+    # Installs virtualenv library
+    venv_dir = kwargs.get("venv", "venv")
+    install_venv()
+    # Initializes virtualenv
+    initialize_venv(venv_dir)
+    # Activates virtualenv
+    activate_venv(venv_dir)
+    # Initialize project file
 
 
 class PipcxConfig:
@@ -36,6 +62,13 @@ class PipcxConfig:
 
         if not self.libraries:
             self.libraries = []
+
+    @staticmethod
+    def config_exists():
+        """
+        Checks if yaml config exists or not
+        """
+        return check_file_exists("pipcx.yaml")
 
     def update(self, **kwargs):
         """
@@ -74,24 +107,11 @@ class PipcxConfig:
         """
         Return slot configs
         """
-        return {key: '' if not getattr(self, key, '')
-                else getattr(self, key, '')
-                for key in self.__slots__}
+        return {key: format_attr(getattr(self, key)) for key in self.__slots__}
 
-
-def initialize_project_config(**kwargs):
-    """
-    Creates base project config file and virtualenv
-    """
-    # Create PipCX Config
-    config = PipcxConfig()
-    # Generate yaml file 'pipcx.yaml'
-    config.update(**kwargs)
-    # Installs virtualenv library
-    venv_dir = kwargs.get("venv", "venv")
-    install_venv()
-    # Initializes virtualenv
-    initialize_venv(venv_dir)
-    # Activates virtualenv
-    activate_venv(venv_dir)
-    # Initialize project file
+    def initialize_config(self, **kwargs):
+        """
+        Initialize project configuration if there is no config
+        """
+        if not self.config_exists():
+            initialize_project_config(**kwargs)
