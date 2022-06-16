@@ -1,12 +1,10 @@
 import os
-import shutil
-from pathlib import Path
 
 import pytest
 
 from pipcx.commands.init import Command as InitCommand
 from pipcx.main import CLI
-from test.utils import make_multiple_inputs, safe_remove_dir
+from test.utils import make_multiple_inputs, command_path
 
 
 @pytest.fixture
@@ -14,24 +12,7 @@ def init_command():
     return InitCommand()
 
 
-@pytest.fixture
-def path():
-    path = Path(__file__).resolve().parent / 'temp'
-    os.chdir(path=path)
-    os.mkdir("__TEST__")
-    os.chdir(path=path / "__TEST__")
-    return path
-
-
-@pytest.fixture(autouse=True)
-def run_around_tests():
-    yield
-    path = Path(__file__).resolve().parent / 'temp'
-    os.chdir(path=path)
-    safe_remove_dir("__TEST__")
-
-
-def test_init_with_option_args(init_command, path, monkeypatch):
+def test_init_with_option_args(init_command, monkeypatch):
     # Set input parameter
     monkeypatch.setattr("builtins.input", make_multiple_inputs(
         ["testproject", "mit", "author", "name@name.com"]))
@@ -46,7 +27,7 @@ def test_init_with_option_args(init_command, path, monkeypatch):
     assert os.path.isfile(".gitignore")
 
 
-def test_init_with_predefined_files_no_input(path, init_command, monkeypatch):
+def test_init_with_predefined_files_no_input(init_command, monkeypatch):
     cli = CLI(["pipcx", "init", "testproject", "--venv=testvenv", "--no-input"])
     # Set input parameter
     os.mkdir("testproject")
@@ -68,7 +49,7 @@ def test_init_with_predefined_files_no_input(path, init_command, monkeypatch):
         file.close()
 
 
-def test_init_with_predefined_files(path, monkeypatch):
+def test_init_with_predefined_files(monkeypatch):
     cli = CLI(["pipcx", "init", "testproject", "--venv=testvenv"])
     # Set input parameter
     monkeypatch.setattr("builtins.input", make_multiple_inputs(
