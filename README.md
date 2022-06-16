@@ -61,12 +61,14 @@ Project  Directory
 ```
 
 #### Options:
+`name` Project Name
 
-`venv` / `--venv`  Virtualenv Directory name
+`--venv`  Virtualenv Directory name
 
 ```shell
-$ pipcx myvenv 
+$ pipcx project_name --venv=my_venv 
 ```
-The above command will create a virtualenv under the name `myvenv`
+The above command will create a virtualenv under the name `my_venv`
+and create project with `project_name`
 
 ---
