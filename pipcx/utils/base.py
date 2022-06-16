@@ -50,7 +50,14 @@ def pip3_install(package: str) -> None:
     """
     Installs package via pip3
     """
-    subprocess.check_call(['pip3', 'install', package])
+    subprocess.run(['pip3', 'install', package])
+
+
+def pip3_upgrade(package: str):
+    """
+    Upgrade package via pip3
+    """
+    subprocess.run(["pip3", "install", "--upgrade", package])
 
 
 def python_sys_execute(*command) -> None:
@@ -58,7 +65,15 @@ def python_sys_execute(*command) -> None:
     Does python -m <command>
     """
     python = sys.executable
-    subprocess.check_call([python, '-m', *command])
+    subprocess.run([python, '-m', *command])
+
+
+def python_exec(*command):
+    """
+    Executes python script
+    """
+    python = sys.executable
+    subprocess.run([python, '-m', *command])
 
 
 def check_file_exists(file):
