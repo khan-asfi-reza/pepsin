@@ -1,17 +1,22 @@
+"""
+Upgrade library module
+"""
 from argparse import ArgumentParser
 from datetime import datetime
 from subprocess import CalledProcessError
 from typing import List
+from urllib import request
+from urllib.error import URLError, HTTPError
 
 from pipcx.base import Base
 from pipcx.schema import PipcxConfig
 from pipcx.utils import pip3_upgrade, update_file, write_file, python_exec
 
-from urllib import request
-from urllib.error import URLError, HTTPError
-
 
 class Command(Base):
+    """
+    Upgrade module command
+    """
 
     def add_argument(self, parser: ArgumentParser):
         parser.add_argument("libs",
@@ -21,6 +26,9 @@ class Command(Base):
 
     @staticmethod
     def handle_upgrade(libs):
+        """
+        Upgrade or install list of modules
+        """
         upgraded = []
         failed = []
         for lib in libs:
@@ -45,9 +53,9 @@ class Command(Base):
                     break
             if has_pip:
                 try:
-                    read = request.urlopen('https://bootstrap.pypa.io/get-pip.py')
-                    write_file("get_pip.py", read.read().decode("utf-8"))
-                    python_exec("get_pip")
+                    with request.urlopen('https://bootstrap.pypa.io/get-pip.py') as file:
+                        write_file("get_pip.py", file.read().decode("utf-8"))
+                        python_exec("get_pip")
                 except (URLError, HTTPError):
                     self.error("Unable to upgrade pip")
 
