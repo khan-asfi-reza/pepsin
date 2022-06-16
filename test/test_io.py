@@ -2,7 +2,7 @@ from collections import deque
 
 import pytest
 
-from pipcx.io import Input, IOBase, Output
+from pipcx.io import Input, IOBase, Output, InputHandler
 from test.utils import make_multiple_inputs
 
 
@@ -89,8 +89,15 @@ def test_output(capsys):
     Test output
     """
     output = Output(title="Title", name="Name")
-    output.prompt()
+    assert output.prompt_as_dict() == {}
     assert "Title" in capsys.readouterr().out
+
+
+def test_input_handler(monkeypatch):
+    monkeypatch.setattr('builtins.input', lambda _: 'test')
+    handler = InputHandler(Input(name="name", type=str, default='value', title="title", required=False))
+    handler.prompt()
+    assert handler.get("name") == 'test'
 
 
 def test_io_base(io_base):
