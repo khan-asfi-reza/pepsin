@@ -18,7 +18,7 @@ import dataclasses
 import sys
 from collections import namedtuple
 from io import TextIOBase
-from typing import Union, List
+from typing import Union
 
 
 class OutputWrapper(TextIOBase):
