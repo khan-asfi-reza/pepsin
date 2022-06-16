@@ -50,14 +50,14 @@ def pip3_install(package: str) -> None:
     """
     Installs package via pip3
     """
-    subprocess.run(['pip3', 'install', package])
+    subprocess.run(['pip3', 'install', package], check=True)
 
 
 def pip3_upgrade(package: str):
     """
     Upgrade package via pip3
     """
-    subprocess.run(["pip3", "install", "--upgrade", package])
+    subprocess.run(["pip3", "install", "--upgrade", package], check=True)
 
 
 def python_sys_execute(*command) -> None:
@@ -65,7 +65,7 @@ def python_sys_execute(*command) -> None:
     Does python -m <command>
     """
     python = sys.executable
-    subprocess.run([python, '-m', *command])
+    subprocess.run([python, '-m', *command], check=True)
 
 
 def python_exec(*command):
@@ -73,7 +73,7 @@ def python_exec(*command):
     Executes python script
     """
     python = sys.executable
-    subprocess.run([python, '-m', *command])
+    subprocess.run([python, '-m', *command], check=True)
 
 
 def check_file_exists(file):
@@ -95,8 +95,8 @@ def read_file(file):
     Safely read File and return text
     """
     try:
-        with open(file, "r", encoding="utf-8") as file:
-            return file.read()
+        with open(file, "r", encoding="utf-8") as __file:
+            return __file.read()
     except FileNotFoundError:
         return ""
 
@@ -105,8 +105,8 @@ def write_file(file, text):
     """
     Safely write file
     """
-    with open(file, "w", encoding="utf-8") as file:
-        return file.write(text)
+    with open(file, "w", encoding="utf-8") as __file:
+        return __file.write(text)
 
 
 def update_file(file, text):

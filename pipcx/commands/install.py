@@ -11,7 +11,9 @@ from pipcx.utils import pip3_install, check_file_exists, get_default, read_file,
 
 
 class Command(Base):
-
+    """
+    Install command class
+    """
     def add_argument(self, parser: ArgumentParser):
         parser.add_argument(
             '-r',
