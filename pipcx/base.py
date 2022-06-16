@@ -4,7 +4,6 @@ This module contains Base Class for all commands
 import sys
 from abc import ABC, abstractmethod
 from argparse import ArgumentParser
-from typing import Union
 
 from pipcx.error import InvalidCommandError
 from pipcx.io import IOBase, InputHandler
@@ -112,7 +111,7 @@ class Base(IOBase, ABC):
         self.templates.save()
 
     @abstractmethod
-    def execute(self) -> Union[None, str]:
+    def execute(self):
         """
         Main logic of the subclass
         """
