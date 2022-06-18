@@ -1,11 +1,12 @@
-from subprocess import CalledProcessError
+import subprocess
+import time
 
 import pytest
 
 from pipcx.commands.install import Command
-from pipcx.schema import PipcxConfig
-from pipcx.utils import write_file, read_file
-from test.utils import command_path
+from pipcx.config import PipcxConfig
+from pipcx.utils import write_file, check_file_exists
+from test.utils import command_path, set_subprocess
 
 
 @pytest.fixture
@@ -13,19 +14,22 @@ def install_command():
     return Command()
 
 
-def test_install(install_command, monkeypatch):
-    monkeypatch.setattr("pipcx.utils.base.pip3_install", lambda _: _)
-    install_command.run(["pipcx", "install", "django", "flask", "-r", "requirements.txt"])
+def test_install(install_command):
+    install_command.run(["pipcx", "install", "flask", "-r", "requirements.txt"])
     conf = PipcxConfig()
     configs = conf.format_config()
-    assert configs.get("libraries") == ["django", "flask"]
+    assert configs.get("libraries") == ["flask"]
 
 
-def test_with_requirements(install_command, monkeypatch):
-    def pip3_install(package):
-        raise CalledProcessError(1, "Test")
+def test_install_with_req(install_command):
+    write_file("requirements.txt", "\n".join(["django", "flask"]))
+    install_command.run(["pipcx", "install", "-r", "requirements.txt"])
+    conf = PipcxConfig()
+    assert conf.libraries == ["django", "flask"]
 
-    monkeypatch.setattr("pipcx.utils.base.pip3_install", lambda _: pip3_install(_))
-    write_file("req.txt", "\n".join(["test", "django"]))
-    install_command.run(["pipcx", "install", "-r", "req.txt"])
 
+def test_install_without_req(install_command):
+    conf = PipcxConfig()
+    conf.update(libraries=["django", "flask"])
+    install_command.run(["pipcx", "install"])
+    assert conf.libraries == ["django", "flask"]
