@@ -4,11 +4,11 @@
         <img src="https://github.com/khan-asfi-reza/pipcx/actions/workflows/development.yaml/badge.svg" alt="">
         <img src="https://codecov.io/gh/khan-asfi-reza/pipcx/branch/master/graph/badge.svg?token=BS5ZJN8ZRI" alt="">
         <img src="https://img.shields.io/badge/code%20style-pep8-orange.svg" alt="">
-        <img src="https://img.shields.io/badge/linting-pylint-green" alt="">    
+        <img src="https://img.shields.io/badge/linting-pylint-green" alt="">
 </div>
 </div>
 
-#### Python Project Initializer CLI Tool, uses pip 
+#### Python Project Initializer CLI Tool, uses pip
 To install packages
 
 `Discarded previous version for not maintaining and complexity of code`
@@ -31,8 +31,8 @@ So primary goal is to -
 Pipcx's code structure is heavily inspired by `django.core.management`
 pipcx implements almost the similar strategy of code writing and work process.
 Pipcx cli library is written using builtin libraries like `argparse` `importlib` `pkgutil` `sys` `os` etc.
-For storing libraries and managing dependencies, `yaml` file has been selected 
-as it has a very basic and minimalistic syntax. 
+For storing libraries and managing dependencies, `yaml` file has been selected
+as it has a very basic and minimalistic syntax.
 
 
 ### Requirements
@@ -43,34 +43,97 @@ as it has a very basic and minimalistic syntax.
 ```shell
 $ pip3 install pipcx
 ```
+## Before use
+
+Pipcx generates or uses `pipcx.yaml` file to store
+all your metadata, project configuration, project libraries and dependencies
+`pipcx.yaml` config file
+```yaml
+name: GameOfChairs # Name of the project
+author: Khan Asfi Reza # Author's name
+email: info@khanasfireza.com # Author's email
+venv: venv # Virtualenv directory name
+license: MIT # Project license type
+libraries:
+  # Installed libraries
+  - django
+  - psycopg2
+  - djangorestframework
+  - django-channels
+```
+
+If any failure or error occurs a `failed.pipcx.log` will be created mentioning the problem
 
 ## Usage
 
-### 1. `init` - Initializes a python project and virtualenv
-
+### 1. `init`
 ```shell
 $ pipcx init
 ```
+Init command generates basic python project to get start with,
+It will interactively ask you to fill the required fields
+```shell
+$ pipcx init
+$ Pipcx Generate Project
+$ ----------------------
+$ Project Name[project]:
+$ Author[]:
+$ Email[]:
+$ License[]:
+```
+File structure
 
-This will create a virtualenv and activate it along with project config yaml file in the project directory
 ```
 Project  Directory
 |____ venv
 |____ pipcx.yaml
+|____ Readme.md
+|____ .gitignore
 |____ project
       |___ main.py
       |___ __init__.py
 ```
 
-#### Options:
-`name` Project Name
+#### Optional Arguments:
+`name` the name of the project and pipcx will create a project with the given project name
 
-`--venv`  Virtualenv Directory name
+Example:
+```shell
+$ pipcx init project_name
+```
+
+#### Options
+
+|option|description|type|required|default|
+|---|---|---|---|---|
+|--venv|Virtual environment directory|string|false|venv|
+|--h|Help text|boolean|false|
+|--no-input|Ignores input prompt|boolean(flag)|false|venv|
+
+### 2. `install`
+
+Command Alias: `add` `i`
+
+Install required dependencies and libraries
 
 ```shell
-$ pipcx project_name --venv=my_venv 
+$ pipcx install django
 ```
-The above command will create a virtualenv under the name `my_venv`
-and create project with `project_name`
+or
+```shell
+$ pipcx i django
+```
+or
+```shell
+$ pipcx add django
+```
+Also `text` file with list of libraries can be installed with `-r` flag
+```shell
+$ pipcx install -r requirements.txt
+```
+Note: install command will by default create a `pipcx.yaml` file and a virtualenv directory named `venv`
 
----
+|option|description|type|required|default|
+|---|---|---|---|---|
+|-r|Install from the given requirements file|string|false|null|
+|--h|Help text|boolean|false|
