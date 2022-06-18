@@ -8,7 +8,6 @@ exclude = '''
   | \.mypy_cache
   | \.tox
   | \.env.*
-  | \env
   | venv
   | _build
   | build
