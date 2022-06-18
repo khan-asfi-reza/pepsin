@@ -30,7 +30,15 @@ class PipcxConfig:
     PIPCX Config blueprint
     """
 
-    __slots__ = ["name", "venv", "author", "license", "libraries", "scripts", "conf"]
+    __slots__ = [
+        "name",
+        "venv",
+        "author",
+        "license",
+        "libraries",
+        "scripts",
+        "conf",
+    ]
 
     def __init__(self):
         self.libraries = []
@@ -93,7 +101,9 @@ class PipcxConfig:
         """
         Return slot configs
         """
-        return {key: format_attr(getattr(self, key)) for key in self.get_slots()}
+        return {
+            key: format_attr(getattr(self, key)) for key in self.get_slots()
+        }
 
     def initialize_config(self, **kwargs):
         """
@@ -107,8 +117,6 @@ def handle_failed_libs(failed):
     """
     Creates or updates failed installation log
     """
-    ftext = (
-        f'# Module Installation Failed {datetime.now().strftime("%d %B %Y | %H:%M:%S")}'
-    )
+    ftext = f'# Module Installation Failed {datetime.now().strftime("%d %B %Y | %H:%M:%S")}'
     failed.insert(0, ftext)
     update_file("pipcx.failed.log", "\n".join(failed))
