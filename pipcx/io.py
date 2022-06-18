@@ -257,4 +257,6 @@ class InputHandler:
         """
         Returns answer in Class Object Form
         """
-        return namedtuple("Answer", self.__answers.keys())(*self.__answers.values())
+        return namedtuple("Answer", self.__answers.keys())(
+            *self.__answers.values()
+        )
