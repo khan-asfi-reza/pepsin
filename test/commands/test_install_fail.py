@@ -1,5 +1,5 @@
 import os
-from test.utils import command_path
+from test.utils import command_path, get_installed_libs_in_venv
 
 import pytest
 
@@ -23,17 +23,5 @@ def test_install_command_within_dir(install_command):
     conf.update(libraries=["requests"], venv="install_venv")
     install_command.run(["pipcx", "install"])
     assert check_dir_exists("install_venv")
-    if get_os() == OSEnum.WIN:
-        dirs = os.listdir(os.path.join("install_venv", "lib", "site-packages"))
-    else:
-        py_dir = os.listdir(
-            os.path.join(
-                "install_venv",
-                "lib",
-            )
-        )
-        dirs = os.listdir(
-            os.path.join("install_venv", "lib", py_dir[0], "site-packages")
-        )
-
+    dirs = get_installed_libs_in_venv("install_venv")
     assert "requests" in dirs

@@ -49,9 +49,10 @@ class PyHandler:
 
         self.venv = self.pipcx_config.venv
         # Create virtualenv if not exist
-        if not (skip_venv and not self.venv) or (
-            self.venv and not check_dir_exists(os.getcwd(), self.venv)
+        if (not self.venv and not skip_venv) or (
+            self.venv and not check_dir_exists(self.venv)
         ):
+            print("Hello World")
             self.venv = get_default(self.venv, "venv")
             self.pipcx_config.update(venv=self.venv)
             self.init_venv(self.venv)
@@ -202,3 +203,30 @@ class PyHandler:
             tuple: List of passed and failed libraries
         """
         return self.__process_library("upgrade", libs, requirements)
+
+    def uninstall_libraries(self, libs=None) -> tuple:
+        """
+        Args:
+            libs: List of libraries to uninstall
+        Returns:
+            tuple: Tuple[List[str], List[str]] List of
+                   libs that passed and failed to uninstall
+        """
+        passed = []
+        failed = []
+        to_uninstall = list(get_default(libs, []))
+        for lib in to_uninstall:
+            if lib in ["pip", "pip3"]:
+                self.error.write("Unable to uninstall pip")
+            else:
+                try:
+                    subprocess.check_call(
+                        [self.pip_exec, "uninstall", lib, "-y"], env=self.env
+                    )
+                    passed.append(lib)
+                except subprocess.CalledProcessError:
+                    self.error.write(f"Unable to uninstall {lib}")
+                    failed.append(lib)
+        if failed:
+            handle_failed_libs(failed, "Unable to uninstall")
+        return passed, failed

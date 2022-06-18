@@ -37,25 +37,47 @@ class PipcxConfig:
         "license",
         "libraries",
         "scripts",
-        "conf",
+        "__conf",
     ]
 
     def __init__(self):
         self.libraries = []
-        self.conf = YAMLConfig("pipcx.yaml")
+        self.__conf = YAMLConfig("pipcx.yaml")
         self.venv = "venv"
-        conf = self.conf.get_config()
+        self.set_config()
+
+    def read_config(self):
+        """
+        Reads config from yaml file
+        Returns: Dictionary
+
+        """
+        return self.__conf.get_config()
+
+    def set_config(self):
+        """
+        Sets config
+        Returns:
+        """
+        conf = self.read_config()
         for slot in self.get_slots():
             setattr(self, slot, conf.get(slot))
-
         if not self.libraries:
             self.libraries = []
+
+    def reload(self):
+        """
+        Reloads config
+        Returns:
+
+        """
+        self.set_config()
 
     def get_slots(self):
         """
         Returns: List of slot excluding conf
         """
-        return [slot for slot in self.__slots__ if slot != "conf"]
+        return [slot for slot in self.__slots__ if slot != "__conf"]
 
     @staticmethod
     def config_exists():
@@ -75,8 +97,8 @@ class PipcxConfig:
             if key != "libraries" and key in self.get_slots():
                 setattr(self, key, kwargs.get(key))
         # Update configuration and save to yaml
-        self.conf.append(**self.format_config())
-        self.conf.save()
+        self.__conf.append(**self.format_config())
+        self.__conf.save()
 
     def update_libraries(self, libs):
         """
@@ -97,6 +119,22 @@ class PipcxConfig:
 
             self.libraries.append(lib)
 
+    def remove_libraries(self, libs):
+        """
+        Remove libraries
+        Args:
+            libs: List[str] List of libraries
+
+        Returns:
+
+        """
+        for lib in libs:
+            if lib in self.libraries:
+                self.libraries.remove(lib)
+        # Update configuration and save to yaml
+        self.__conf.append(**self.format_config())
+        self.__conf.save()
+
     def format_config(self):
         """
         Return slot configs
@@ -113,13 +151,12 @@ class PipcxConfig:
             self.update(**kwargs)
 
 
-def handle_failed_libs(failed):
+def handle_failed_libs(failed, action_msg="Module Installation Failed"):
     """
     Creates or updates failed installation log
     """
     ftext = (
-        "# Module Installation Failed"
-        f' {datetime.now().strftime("%d %B %Y | %H:%M:%S")}'
+        f"# {action_msg}" f' {datetime.now().strftime("%d %B %Y | %H:%M:%S")}'
     )
     failed.insert(0, ftext)
     update_file("pipcx.failed.log", "\n".join(failed))

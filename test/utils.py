@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from pipcx.utils import check_dir_exists
+from pipcx.utils import OSEnum, check_dir_exists, get_os
 
 
 def make_multiple_inputs(inputs: list):
@@ -64,3 +64,20 @@ def command_path():
     safe_remove_dir("venv")
     safe_remove_file("pipcx.yaml")
     safe_remove_file("pipcx.failed.log")
+
+
+def get_installed_libs_in_venv(venv_name):
+    if get_os() == OSEnum.WIN:
+        dirs = os.listdir(os.path.join(venv_name, "lib", "site-packages"))
+    else:
+        py_dir = os.listdir(
+            os.path.join(
+                venv_name,
+                "lib",
+            )
+        )
+        dirs = os.listdir(
+            os.path.join(venv_name, "lib", py_dir[0], "site-packages")
+        )
+
+    return dirs
