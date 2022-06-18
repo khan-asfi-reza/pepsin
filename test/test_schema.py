@@ -1,4 +1,4 @@
-from pipcx.schema import get_project_name
+from pipcx.config import get_project_name
 
 
 def test_get_project_name():
