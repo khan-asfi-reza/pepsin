@@ -1,12 +1,12 @@
 import os
 import subprocess
 from pathlib import Path
-import sys
+
 import pytest
-from unittest.mock import MagicMock
+
 from pipcx.const import COMMAND_NOT_FOUND_ERROR
 from pipcx.main import CLI, main
-from pipcx.utils import pip3_install, get_os, OSEnum, activate_venv, install_venv
+from pipcx.utils import get_os, OSEnum
 from pipcx.utils.spinner import Spinner
 from pipcx.version import get_version
 
@@ -71,13 +71,6 @@ def check_all(lst=None):
     pass
 
 
-def test_pip3_install(monkeypatch):
-    try:
-        pip3_install("os")
-    except subprocess.CalledProcessError as e:
-        assert e.returncode == 1
-
-
 def test_sys_platform():
     # Test Linux system
     platform_os = get_os("linux")
@@ -88,21 +81,3 @@ def test_sys_platform():
     # Test windows system
     platform_os = get_os("win32")
     assert platform_os == OSEnum.WIN
-
-
-def test_activate_venv_linux(monkeypatch):
-    monkeypatch.setattr("pipcx.utils.venv.get_os", lambda: OSEnum.LINUX)
-    monkeypatch.setattr("os.system", lambda _: _)
-    activate_venv("test")
-
-
-def test_activate_venv_windows(monkeypatch):
-    monkeypatch.setattr("pipcx.utils.venv.get_os", lambda: OSEnum.WIN)
-    monkeypatch.setattr("os.system", lambda _: _)
-    activate_venv("test")
-
-
-def test_install_venv(monkeypatch):
-    monkeypatch.setattr("pkg_resources.working_set", {})
-    monkeypatch.setattr("pipcx.utils.base.pip3_install", lambda _: _)
-    install_venv()
