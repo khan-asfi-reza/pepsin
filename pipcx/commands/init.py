@@ -31,7 +31,8 @@ from argparse import ArgumentParser
 
 from pipcx.base import Base
 from pipcx.io import Input
-from pipcx.schema import get_project_name, initialize_project_config
+from pipcx.config import get_project_name, PipcxConfig
+from pipcx.pyhandler import PyHandler
 from pipcx.template import Template, TemplateList
 
 MAIN_FILE = ""
@@ -142,7 +143,9 @@ class Command(Base):
         """
         Inherited execute method
         """
-        initialize_project_config(**self.command_data)
+        conf = PipcxConfig()
+        conf.update(**self.command_data)
+        PyHandler(conf, self.stdout, self.stderr)
         # Installs virtualenv library
         self.handle_directory()
         self.output("\nProject initialization complete")
