@@ -46,7 +46,8 @@ class CLI(IOBase):
         if self.command in ["--help", "-h", "help"]:
             string = [
                 f"pipcx v{version}",
-                "Type the name of the command and --help for help on a specific command",
+                "Type the name of the command and --help for help on a"
+                " specific command",
                 "",
                 "Available commands: ",
             ]

@@ -27,14 +27,15 @@ class Base(IOBase, ABC):
     Methods:
         1. ``add_argument`` Adds custom argument to the parser,
         that will be later converted into dictionary
-            E.G:
-            ```
-            def add_argument(self, parser):
-                parser.add_argument('--option_1', action='store_true', help='Help Text')
-            ```
+        E.G:
+        ```
+        def add_argument(self, parser):
+            parser.add_argument('--option_1', action='store_true', help='Help Text')
+        ```
         2. ``execute`` method is the abstract method that needs to be
         implement in the subclass of Base Class, every
-            command must have an ``execute`` method as business logic will be inside this method
+        command must have an ``execute`` method
+        as business logic will be inside this method
     """
 
     help = ""

@@ -117,6 +117,9 @@ def handle_failed_libs(failed):
     """
     Creates or updates failed installation log
     """
-    ftext = f'# Module Installation Failed {datetime.now().strftime("%d %B %Y | %H:%M:%S")}'
+    ftext = (
+        "# Module Installation Failed"
+        f' {datetime.now().strftime("%d %B %Y | %H:%M:%S")}'
+    )
     failed.insert(0, ftext)
     update_file("pipcx.failed.log", "\n".join(failed))

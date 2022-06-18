@@ -34,7 +34,10 @@ Example: `$pipcx install django`
             "-r",
             type=str,
             metavar="requirement.txt",
-            help="Install from a text file, similar to pip install -r requirements.txt",
+            help=(
+                "Install from a text file, similar to pip install -r"
+                " requirements.txt"
+            ),
         )
 
     def execute(self):

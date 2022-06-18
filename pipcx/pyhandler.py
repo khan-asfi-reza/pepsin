@@ -11,8 +11,15 @@ from urllib.error import HTTPError, URLError
 from pipcx.config import PipcxConfig, handle_failed_libs
 from pipcx.const import PIP_DL_LINK
 from pipcx.io import OutputWrapper
-from pipcx.utils import (OSEnum, check_dir_exists, check_file_exists,
-                         get_default, get_os, read_file, write_file)
+from pipcx.utils import (
+    OSEnum,
+    check_dir_exists,
+    check_file_exists,
+    get_default,
+    get_os,
+    read_file,
+    write_file,
+)
 
 
 class PyHandler:
