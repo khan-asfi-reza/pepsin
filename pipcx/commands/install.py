@@ -50,5 +50,7 @@ Example: `$pipcx install django`
         requirement = self.command_data.get("r")
         if not libs and not requirement:
             libs = config.libraries
-        installed = py_handler.install_libraries(libs, requirements=requirement)[0]
+        installed = py_handler.install_libraries(
+            libs, requirements=requirement
+        )[0]
         config.update(libraries=installed)
