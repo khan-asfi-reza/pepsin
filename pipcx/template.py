@@ -31,7 +31,9 @@ class Template:
 
         if not os.path.isfile(temp_name):
             # Throw if templates does not exist
-            raise TemplateDoesNotExistError(f"Template {temp_name} does not exist")
+            raise TemplateDoesNotExistError(
+                f"Template {temp_name} does not exist"
+            )
 
         with open(temp_name, "r", encoding="utf-8") as file:
             self.file = file.read()
@@ -57,7 +59,9 @@ class Template:
         self.read()
         self.format()
         working_dir = os.getcwd()
-        with open(f"{working_dir}/{self.save_as}", "w", encoding="utf-8") as file:
+        with open(
+            f"{working_dir}/{self.save_as}", "w", encoding="utf-8"
+        ) as file:
             file.write(self.file)
 
 
