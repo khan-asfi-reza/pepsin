@@ -1,3 +1,4 @@
+from test.utils import command_path, set_subprocess
 from urllib.error import URLError
 
 import pytest
@@ -5,7 +6,6 @@ import pytest
 from pipcx.commands.upgrade import Command
 from pipcx.config import PipcxConfig
 from pipcx.utils import write_file
-from test.utils import command_path, set_subprocess
 
 
 @pytest.fixture
@@ -14,7 +14,9 @@ def upgrade_command():
 
 
 def test_install(upgrade_command):
-    upgrade_command.run(["pipcx", "upgrade", "flask", "pip", "-r", "requirements.txt"])
+    upgrade_command.run(
+        ["pipcx", "upgrade", "flask", "pip", "-r", "requirements.txt"]
+    )
     conf = PipcxConfig()
     configs = conf.format_config()
     assert configs.get("libraries") == ["flask"]
@@ -41,4 +43,3 @@ def test_upgrade_pip_fail(upgrade_command, monkeypatch, capsys):
     monkeypatch.setattr("urllib.request.urlopen", raise_urlopen_error)
     upgrade_command.run(["pipcx", "upgrade", "pip"])
     assert "Unable to upgrade" in capsys.readouterr().err
-
