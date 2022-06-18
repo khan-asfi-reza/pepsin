@@ -16,6 +16,7 @@ class Template:
     """
     Template class that is used to save and format Template Files
     """
+
     def __init__(self, template_name, save_as=None, context=None):
         self.template_name = template_name
         self.file = ""
@@ -64,6 +65,7 @@ class TemplateList:
     """
     List of templates that needs to be handled
     """
+
     def __init__(self):
         self.templates = []
 
