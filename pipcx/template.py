@@ -59,10 +59,11 @@ class Template:
         self.read()
         self.format()
         working_dir = os.getcwd()
-        with open(
-            f"{working_dir}/{self.save_as}", "w", encoding="utf-8"
-        ) as file:
-            file.write(self.file)
+        if not os.path.isfile(os.path.join(working_dir, self.save_as)):
+            with open(
+                f"{working_dir}/{self.save_as}", "w", encoding="utf-8"
+            ) as file:
+                file.write(self.file)
 
 
 class TemplateList:
