@@ -9,4 +9,3 @@ def test_template_does_not_exist():
 
     except TemplateDoesNotExistError as error:
         assert isinstance(error, TemplateDoesNotExistError)
-
