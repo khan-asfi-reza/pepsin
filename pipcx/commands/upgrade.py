@@ -16,19 +16,16 @@ class Command(Base):
 
     def add_argument(self, parser: ArgumentParser):
         parser.add_argument(
-            '-r',
-            type=str,
-            metavar="<requirement.txt>",
-            help="Upgrade from a text file"
+            "-r", type=str, metavar="<requirement.txt>", help="Upgrade from a text file"
         )
 
         parser.add_argument(
             "libs",
-            nargs='*',
+            nargs="*",
             metavar="<Libraries>",
             type=str,
             help="Libraries to upgrade",
-            default='',
+            default="",
         )
 
     def execute(self):
