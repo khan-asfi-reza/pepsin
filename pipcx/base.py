@@ -6,7 +6,7 @@ from abc import ABC, abstractmethod
 from argparse import ArgumentParser
 
 from pipcx.error import InvalidCommandError
-from pipcx.io import IOBase, InputHandler
+from pipcx.io import InputHandler, IOBase
 from pipcx.template import TemplateList
 from pipcx.version import get_version
 
@@ -36,8 +36,9 @@ class Base(IOBase, ABC):
         implement in the subclass of Base Class, every
             command must have an ``execute`` method as business logic will be inside this method
     """
-    help = ''
-    short_description = ''
+
+    help = ""
+    short_description = ""
 
     def __init__(self):
         self.input_handler: InputHandler = InputHandler()
@@ -66,18 +67,13 @@ class Base(IOBase, ABC):
         """
         Creates Argument Parser Class Object, add 'version' argument
         """
-        parser = ArgumentParser(
-            prog=f"{program_name} {command}"
-        )
+        parser = ArgumentParser(prog=f"{program_name} {command}")
         parser.add_argument(
             "--version",
             action="version",
             version=get_version(),
         )
-        parser.add_argument(
-            '--no-input',
-            action="store_true"
-        )
+        parser.add_argument("--no-input", action="store_true")
         # Subclass custom arguments will be added via this method
         self.add_argument(parser)
         return parser
