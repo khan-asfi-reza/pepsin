@@ -1,11 +1,10 @@
 import os
+from test.utils import command_path
 
 import pytest
 
 from pipcx.pyhandler import PyHandler
 from pipcx.utils import write_file
-
-from test.utils import command_path
 
 
 @pytest.fixture
