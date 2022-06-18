@@ -1,6 +1,5 @@
 [tool.black]
 line-length = 79
-include = '\.pyi?$'
 exclude = '''
 /(
     \.eggs
@@ -16,27 +15,6 @@ exclude = '''
   | docs
   | manual_testing
 )\
-'''
-
-[flake8]
-ignore = ["D203", "W503", "E203", "N818", "E501"]
-max-line-length = 79
-max-complexity = 18
-exclude = '''
-/(
-    \.eggs
-  | \.git
-  | \.hg
-  | \.mypy_cache
-  | \.tox
-  | \.venv
-  | _build
-  | buck-out
-  | build
-  | dist
-  | venv
-  | manual_testing
-)/
 '''
 
 [tool.pylint]
