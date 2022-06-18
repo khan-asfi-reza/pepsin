@@ -81,6 +81,7 @@ class CLIIOBase(abc.ABC):
     """
     CLI Input or output base
     """
+
     name: str
     title: str
 
@@ -133,6 +134,7 @@ class Input(CLIIOBase):
         required: bool | Is the input required or skip-able
         options: list | Available option list
     """
+
     type: type = str
     default: Union[str, int, bool, None] = None
     required: bool = True
@@ -152,13 +154,13 @@ class Input(CLIIOBase):
             title += " (y/n)"
 
         if self.options:
-            title += '\n'
+            title += "\n"
             for key, option in enumerate(self.options):
                 title += f"{key + 1}. {option}\n"
 
-        default = '' if not self.default else self.default
+        default = "" if not self.default else self.default
 
-        title += f'[{default}]:'
+        title += f"[{default}]:"
         return title
 
     def prompt(self) -> Union[bool, None, int, str]:
@@ -183,7 +185,7 @@ class Input(CLIIOBase):
                 else:
                     continue
 
-            return inp.lower() in ['1', 'y'] if self.type is bool else __final
+            return inp.lower() in ["1", "y"] if self.type is bool else __final
 
     def prompt_as_dict(self):
         """
