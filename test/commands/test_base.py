@@ -7,7 +7,6 @@ from pipcx.error import InvalidCommandError
 
 
 class CommandTest(Base):
-
     def execute(self, *args, **kwargs) -> Union[None, str]:
         raise InvalidCommandError("Test Error")
 
