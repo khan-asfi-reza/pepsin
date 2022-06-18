@@ -9,6 +9,10 @@ class InvalidCommandError(Exception):
     command.
     """
 
-    def __init__(self, *args, return_code=1, ):
+    def __init__(
+        self,
+        *args,
+        return_code=1,
+    ):
         self.return_code = return_code
         super().__init__(*args)
