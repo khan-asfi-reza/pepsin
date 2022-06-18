@@ -6,18 +6,20 @@ import subprocess
 import sys
 from typing import List
 from urllib import request
-from urllib.error import URLError, HTTPError
+from urllib.error import HTTPError, URLError
 
 from pipcx.config import PipcxConfig, handle_failed_libs
 from pipcx.const import PIP_DL_LINK
 from pipcx.io import OutputWrapper
-from pipcx.utils import (get_default,
-                         write_file,
-                         check_file_exists,
-                         read_file,
-                         get_os,
-                         OSEnum,
-                         check_dir_exists)
+from pipcx.utils import (
+    OSEnum,
+    check_dir_exists,
+    check_file_exists,
+    get_default,
+    get_os,
+    read_file,
+    write_file,
+)
 
 
 class PyHandler:
@@ -38,15 +40,16 @@ class PyHandler:
         # Read pipcx config to get venv
         self.output = stdout if stdout else OutputWrapper(sys.stdout)
         self.error = stderr if stderr else OutputWrapper(sys.stderr)
-        self.executable = 'python' if get_os() == OSEnum.WIN else 'python3'
-        self.pip_exec = 'pip' if get_os() == OSEnum.WIN else 'pip3'
+        self.executable = "python" if get_os() == OSEnum.WIN else "python3"
+        self.pip_exec = "pip" if get_os() == OSEnum.WIN else "pip3"
         self.pipcx_config = pipcx_config if pipcx_config else PipcxConfig()
         self.env = os.environ.copy()
 
         self.venv = self.pipcx_config.venv
         # Create virtualenv if not exist
-        if not (skip_venv and not self.venv) or \
-                (self.venv and not check_dir_exists(os.getcwd(), self.venv)):
+        if not (skip_venv and not self.venv) or (
+            self.venv and not check_dir_exists(os.getcwd(), self.venv)
+        ):
             self.venv = get_default(self.venv, "venv")
             self.pipcx_config.update(venv=self.venv)
             self.init_venv(self.venv)
@@ -62,7 +65,9 @@ class PyHandler:
 
         Returns: string
         """
-        return os.pathsep.join([script_dir] + os.environ.get("PATH", "").split(os.pathsep))
+        return os.pathsep.join(
+            [script_dir] + os.environ.get("PATH", "").split(os.pathsep)
+        )
 
     def set_env(self):
         """
@@ -79,8 +84,8 @@ class PyHandler:
             script_dir = os.path.join(os.getcwd(), self.venv, script_loc)
             self.env["VIRTUAL_ENV"] = venv_dir
             self.env["PATH"] = self.__join_env_path(script_dir)
-            self.executable = f'{script_dir}/python'
-            self.pip_exec = f'{script_dir}/pip'
+            self.executable = f"{script_dir}/python"
+            self.pip_exec = f"{script_dir}/pip"
 
     def python_execute(self, *commands):
         """
@@ -125,11 +130,15 @@ class PyHandler:
                     self.python_execute("get_pip")
             except (URLError, HTTPError):
                 self.error.write("Unable to upgrade pip")
-        subprocess.check_call([self.pip_exec,
-                               "install",
-                               "--upgrade", *package_list], shell=True, env=self.env)
+        subprocess.check_call(
+            [self.pip_exec, "install", "--upgrade", *package_list],
+            shell=True,
+            env=self.env,
+        )
 
-    def __process_library(self, action, libs=None, requirements='') -> (List[str], List[str]):
+    def __process_library(
+        self, action, libs=None, requirements=""
+    ) -> (List[str], List[str]):
         """
         Process library with action
         Args:
@@ -145,7 +154,7 @@ class PyHandler:
         to_install: List[str] = get_default(libs, [])
         if requirements:
             if not check_file_exists(requirements):
-                self.error.write(f'{requirements} does not exist')
+                self.error.write(f"{requirements} does not exist")
             else:
                 to_install += read_file(requirements).split("\n")
                 to_install = [each for each in to_install if "#" not in each]
@@ -155,7 +164,7 @@ class PyHandler:
                     self.pip_upgrade(lib)
                 else:
                     self.pip_install(lib)
-                if lib not in ["pip", 'pip3']:
+                if lib not in ["pip", "pip3"]:
                     passed.append(lib)
             except subprocess.CalledProcessError:
                 self.error.write(f"Unable to install {lib}")
@@ -166,7 +175,7 @@ class PyHandler:
 
         return passed, failed
 
-    def install_libraries(self, libs=None, requirements='') -> (List[str], List[str]):
+    def install_libraries(self, libs=None, requirements="") -> (List[str], List[str]):
         """
         Installs multiple libraries
         Args:
@@ -177,7 +186,7 @@ class PyHandler:
         """
         return self.__process_library("install", libs, requirements)
 
-    def upgrade_libraries(self, libs=None, requirements=''):
+    def upgrade_libraries(self, libs=None, requirements=""):
         """
         Upgrades multiple libraries
         Args:
