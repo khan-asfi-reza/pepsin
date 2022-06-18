@@ -11,15 +11,8 @@ from urllib.error import HTTPError, URLError
 from pipcx.config import PipcxConfig, handle_failed_libs
 from pipcx.const import PIP_DL_LINK
 from pipcx.io import OutputWrapper
-from pipcx.utils import (
-    OSEnum,
-    check_dir_exists,
-    check_file_exists,
-    get_default,
-    get_os,
-    read_file,
-    write_file,
-)
+from pipcx.utils import (OSEnum, check_dir_exists, check_file_exists,
+                         get_default, get_os, read_file, write_file)
 
 
 class PyHandler:
@@ -27,7 +20,9 @@ class PyHandler:
     Handles python and pip package installation, management
     """
 
-    def __init__(self, pipcx_config=None, stdout=None, stderr=None, skip_venv=False):
+    def __init__(
+        self, pipcx_config=None, stdout=None, stderr=None, skip_venv=False
+    ):
         """
         Save env variable and set env variable to run code
         Using venv
@@ -109,7 +104,9 @@ class PyHandler:
         """
         Installs packages through pip
         """
-        subprocess.check_call([self.pip_exec, "install", *packages], env=self.env)
+        subprocess.check_call(
+            [self.pip_exec, "install", *packages], env=self.env
+        )
 
     def pip_upgrade(self, *packages):
         """
@@ -175,7 +172,9 @@ class PyHandler:
 
         return passed, failed
 
-    def install_libraries(self, libs=None, requirements="") -> (List[str], List[str]):
+    def install_libraries(
+        self, libs=None, requirements=""
+    ) -> (List[str], List[str]):
         """
         Installs multiple libraries
         Args:
