@@ -77,15 +77,27 @@ class Command(Base):
 
         if not project_name:
             handler.add_input(
-                Input(name="name", title="Project Name", default="src", required=False)
+                Input(
+                    name="name",
+                    title="Project Name",
+                    default="src",
+                    required=False,
+                )
             )
 
         handler.add_inputs(
-            Input(name="author", title="Author", default="Author", required=False),
             Input(
-                name="email", title="Email", default="email@email.com", required=False
+                name="author", title="Author", default="Author", required=False
             ),
-            Input(name="license", title="license", default="MIT", required=False),
+            Input(
+                name="email",
+                title="Email",
+                default="email@email.com",
+                required=False,
+            ),
+            Input(
+                name="license", title="license", default="MIT", required=False
+            ),
         )
 
     def format_arguments(self, **kwargs):
@@ -111,7 +123,9 @@ class Command(Base):
         working_dir = os.getcwd()
 
         if not os.path.exists(f"{working_dir}/{project_name}/main.py"):
-            with open(f"{project_name}/main.py", "w", encoding="utf-8") as file:
+            with open(
+                f"{project_name}/main.py", "w", encoding="utf-8"
+            ) as file:
                 file.write(MAIN_FILE)
 
     def add_templates(self, template_list: TemplateList):
