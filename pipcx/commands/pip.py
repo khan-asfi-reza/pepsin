@@ -17,7 +17,10 @@ class Command(Base):
 
     def add_argument(self, parser: ArgumentParser):
         parser.add_argument(
-            "command", metavar="<command>", nargs="*", help="Pip command, IE: freeze"
+            "command",
+            metavar="<command>",
+            nargs="*",
+            help="Pip command, IE: freeze",
         )
 
     def execute(self):
