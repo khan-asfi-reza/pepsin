@@ -30,8 +30,8 @@ import os
 from argparse import ArgumentParser
 
 from pipcx.base import Base
+from pipcx.config import PipcxConfig, get_project_name
 from pipcx.io import Input
-from pipcx.config import get_project_name, PipcxConfig
 from pipcx.pyhandler import PyHandler
 from pipcx.template import Template, TemplateList
 
@@ -49,6 +49,8 @@ class Command(Base):
     """
 
     short_description = "Initialize Virtual environment"
+    help = """Initialize virtual environment, project data and file
+    """
 
     def add_argument(self, parser: ArgumentParser):
         """
@@ -56,15 +58,15 @@ class Command(Base):
         """
         parser.add_argument(
             "name",
-            nargs='?',
+            nargs="?",
             metavar="name",
             type=str,
             help="Name of Project",
-            default=''
+            default="",
         )
 
         parser.add_argument(
-            '--venv', help="Virtual Environment directory name", default="venv"
+            "--venv", help="Virtual Environment directory name", default="venv"
         )
 
     def add_input(self, handler, **options):
@@ -79,28 +81,22 @@ class Command(Base):
                     name="name",
                     title="Project Name",
                     default="src",
-                    required=False
+                    required=False,
                 )
             )
 
         handler.add_inputs(
             Input(
-                name="author",
-                title="Author",
-                default="Author",
-                required=False
+                name="author", title="Author", default="Author", required=False
             ),
             Input(
                 name="email",
                 title="Email",
                 default="email@email.com",
-                required=False
+                required=False,
             ),
             Input(
-                name="license",
-                title="license",
-                default="MIT",
-                required=False
+                name="license", title="license", default="MIT", required=False
             ),
         )
 
@@ -127,7 +123,9 @@ class Command(Base):
         working_dir = os.getcwd()
 
         if not os.path.exists(f"{working_dir}/{project_name}/main.py"):
-            with open(f"{project_name}/main.py", "w", encoding="utf-8") as file:
+            with open(
+                f"{project_name}/main.py", "w", encoding="utf-8"
+            ) as file:
                 file.write(MAIN_FILE)
 
     def add_templates(self, template_list: TemplateList):
@@ -136,7 +134,10 @@ class Command(Base):
         """
         template_list.add_template(
             Template(template_name=".gitignore"),
-            Template(template_name="Readme.MD", context={"name": self.command_data.get("name")})
+            Template(
+                template_name="Readme.MD",
+                context={"name": self.command_data.get("name")},
+            ),
         )
 
     def execute(self):

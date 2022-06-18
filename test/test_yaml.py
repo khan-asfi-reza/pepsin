@@ -4,12 +4,12 @@ from pathlib import Path
 import pytest
 import yaml
 
-from pipcx.yml import yaml_to_dict, dict_to_yaml, YAMLConfig
+from pipcx.yml import YAMLConfig, dict_to_yaml, yaml_to_dict
 
 
 @pytest.fixture
 def path():
-    path = Path(__file__).resolve().parent / 'data'
+    path = Path(__file__).resolve().parent / "data"
     os.chdir(path=path)
     return path
 
@@ -20,19 +20,19 @@ def test_yaml_load():
     name: pipcx
     """
     data = yaml.load(yaml_data, yaml.Loader)
-    assert data["name"] == 'pipcx'
+    assert data["name"] == "pipcx"
 
 
 def test_load_yaml_data(path):
     data = yaml_to_dict("test.yaml")
-    assert data.get("name") == 'Pipcx'
+    assert data.get("name") == "Pipcx"
 
 
 def test_load_dict_to_yaml(path):
     __dict = {"name": "Pipcx"}
     dict_to_yaml(__dict, "pytest.yaml")
     data = yaml_to_dict("pytest.yaml")
-    assert data.get("name") == 'Pipcx'
+    assert data.get("name") == "Pipcx"
     os.remove("pytest.yaml")
 
 
@@ -65,7 +65,7 @@ def test_dict_to_yaml_config_loader(path):
 
 def test_empty_yaml(path):
     __conf = YAMLConfig("temp_test.yaml")
-    assert __conf.get_filename() == 'temp_test.yaml'
+    assert __conf.get_filename() == "temp_test.yaml"
     __conf.read_from_yaml()
     assert len(__conf.get_config()) == 0
-    assert __conf.get_filename() == 'temp_test.yaml'
+    assert __conf.get_filename() == "temp_test.yaml"

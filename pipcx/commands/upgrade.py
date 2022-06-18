@@ -16,19 +16,19 @@ class Command(Base):
 
     def add_argument(self, parser: ArgumentParser):
         parser.add_argument(
-            '-r',
+            "-r",
             type=str,
             metavar="<requirement.txt>",
-            help="Upgrade from a text file"
+            help="Upgrade from a text file",
         )
 
         parser.add_argument(
             "libs",
-            nargs='*',
+            nargs="*",
             metavar="<Libraries>",
             type=str,
             help="Libraries to upgrade",
-            default='',
+            default="",
         )
 
     def execute(self):
@@ -44,5 +44,7 @@ class Command(Base):
         requirement = self.command_data.get("r")
         if not libs and not requirement:
             libs = config.libraries
-        installed = py_handler.upgrade_libraries(libs, requirements=requirement)[0]
+        installed = py_handler.upgrade_libraries(
+            libs, requirements=requirement
+        )[0]
         config.update(libraries=installed)

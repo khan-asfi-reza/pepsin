@@ -1,0 +1,22 @@
+[tool.black]
+line-length = 79
+exclude = '''
+/(
+    \.eggs
+  | \.git
+  | \.mypy_cache
+  | \.tox
+  | \.env.*
+  | venv
+  | _build
+  | build
+  | dist
+  | examples
+  | docs
+  | manual_testing
+)\
+'''
+
+[tool.pylint]
+ignore-patterns="__init__.py"
+disable=["E1101","E1133"]

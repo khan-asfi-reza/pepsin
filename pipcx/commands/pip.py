@@ -14,11 +14,14 @@ class Command(Base):
         `pip --h` now can be written as
         `pipcx pip --h`
     """
+
     def add_argument(self, parser: ArgumentParser):
-        parser.add_argument("command",
-                            metavar="<command>",
-                            nargs="*",
-                            help="Pip command, IE: freeze")
+        parser.add_argument(
+            "command",
+            metavar="<command>",
+            nargs="*",
+            help="Pip command, IE: freeze",
+        )
 
     def execute(self):
         py_handler = PyHandler(skip_venv=True)

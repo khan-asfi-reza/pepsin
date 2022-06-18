@@ -16,6 +16,7 @@ class Template:
     """
     Template class that is used to save and format Template Files
     """
+
     def __init__(self, template_name, save_as=None, context=None):
         self.template_name = template_name
         self.file = ""
@@ -30,7 +31,9 @@ class Template:
 
         if not os.path.isfile(temp_name):
             # Throw if templates does not exist
-            raise TemplateDoesNotExistError(f"Template {temp_name} does not exist")
+            raise TemplateDoesNotExistError(
+                f"Template {temp_name} does not exist"
+            )
 
         with open(temp_name, "r", encoding="utf-8") as file:
             self.file = file.read()
@@ -56,7 +59,9 @@ class Template:
         self.read()
         self.format()
         working_dir = os.getcwd()
-        with open(f"{working_dir}/{self.save_as}", "w", encoding="utf-8") as file:
+        with open(
+            f"{working_dir}/{self.save_as}", "w", encoding="utf-8"
+        ) as file:
             file.write(self.file)
 
 
@@ -64,6 +69,7 @@ class TemplateList:
     """
     List of templates that needs to be handled
     """
+
     def __init__(self):
         self.templates = []
 

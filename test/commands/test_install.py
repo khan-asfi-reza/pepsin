@@ -1,12 +1,12 @@
 import subprocess
 import time
+from test.utils import command_path, set_subprocess
 
 import pytest
 
 from pipcx.commands.install import Command
 from pipcx.config import PipcxConfig
-from pipcx.utils import write_file, check_file_exists
-from test.utils import command_path, set_subprocess
+from pipcx.utils import check_file_exists, write_file
 
 
 @pytest.fixture
@@ -15,7 +15,9 @@ def install_command():
 
 
 def test_install(install_command):
-    install_command.run(["pipcx", "install", "flask", "-r", "requirements.txt"])
+    install_command.run(
+        ["pipcx", "install", "flask", "-r", "requirements.txt"]
+    )
     conf = PipcxConfig()
     configs = conf.format_config()
     assert configs.get("libraries") == ["flask"]

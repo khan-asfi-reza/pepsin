@@ -1,15 +1,15 @@
 import os
 from pathlib import Path
+from test.utils import safe_remove_file
 
 import pytest
 
 from pipcx.config import PipcxConfig
-from test.utils import safe_remove_file
 
 
 @pytest.fixture
 def path():
-    path = Path(__file__).resolve().parent / 'temp'
+    path = Path(__file__).resolve().parent / "temp"
     os.chdir(path=path)
     return path
 
@@ -17,7 +17,7 @@ def path():
 @pytest.fixture(autouse=True)
 def run_around_tests():
     yield
-    path = Path(__file__).resolve().parent / 'temp'
+    path = Path(__file__).resolve().parent / "temp"
     os.chdir(path=path)
     safe_remove_file("pipcx.yaml")
 

@@ -6,7 +6,7 @@ import sys
 
 from pipcx.const import COMMAND_NOT_FOUND_ERROR
 from pipcx.io import IOBase
-from pipcx.utils.base import load_command_class, get_commands
+from pipcx.utils.base import get_commands, load_command_class
 from pipcx.version import get_version
 
 
@@ -43,20 +43,19 @@ class CLI(IOBase):
         Returns Help Text
         """
         version = get_version()
-        if self.command in ['--help', '-h', 'help']:
+        if self.command in ["--help", "-h", "help"]:
             string = [
                 f"pipcx v{version}",
-                "Type the name of the command and --help for help on a specific command",
+                "Type the name of the command and --help for help on a"
+                " specific command",
                 "",
-                "Available commands: "
+                "Available commands: ",
             ]
             for command in get_commands():
                 command_class = load_command_class(command)
-                string.append(
-                    f"{command} : {command_class.short_description}"
-                )
+                string.append(f"{command} : {command_class.short_description}")
 
-            return '\n'.join(string)
+            return "\n".join(string)
 
         command_class = load_command_class(self.command)
         return command_class.format_help(self.program_name, self.command)
@@ -65,11 +64,11 @@ class CLI(IOBase):
         """
         Executes the commands or throws error or prints help text
         """
-        if self.command in ['--help', '-h', 'help']:
+        if self.command in ["--help", "-h", "help"]:
             help_text = self.print_help()
             self.output(help_text)
 
-        elif self.command == '--version' or self.argv[1:] == '--version':
+        elif self.command == "--version" or self.argv[1:] == "--version":
             version = get_version()
             self.output(version + "\n")
 

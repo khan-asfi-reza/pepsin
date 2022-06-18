@@ -1,12 +1,11 @@
 import os
+from test.utils import command_path
 
 import pytest
 
 from pipcx.commands.install import Command
 from pipcx.config import PipcxConfig
-from pipcx.utils import check_file_exists, check_dir_exists, get_os, OSEnum
-
-from test.utils import command_path
+from pipcx.utils import OSEnum, check_dir_exists, check_file_exists, get_os
 
 
 @pytest.fixture
@@ -27,7 +26,14 @@ def test_install_command_within_dir(install_command):
     if get_os() == OSEnum.WIN:
         dirs = os.listdir(os.path.join("install_venv", "lib", "site-packages"))
     else:
-        py_dir = os.listdir(os.path.join("install_venv", "lib", ))
-        dirs = os.listdir(os.path.join("install_venv", "lib", py_dir[0], "site-packages"))
+        py_dir = os.listdir(
+            os.path.join(
+                "install_venv",
+                "lib",
+            )
+        )
+        dirs = os.listdir(
+            os.path.join("install_venv", "lib", py_dir[0], "site-packages")
+        )
 
     assert "requests" in dirs

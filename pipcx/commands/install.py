@@ -14,22 +14,30 @@ class Command(Base):
     Install command class
     """
 
-    def add_argument(self, parser: ArgumentParser):
+    short_description = "Install library"
+    help = """Install a particular or multiple libraries
+`$pipcx install <library>`
+Example: `$pipcx install django`
+"""
 
+    def add_argument(self, parser: ArgumentParser):
         parser.add_argument(
             "libraries_to_install",
-            nargs='*',
+            nargs="*",
             metavar="libs",
             type=str,
             help="Libraries to install",
-            default='',
+            default="",
         )
 
         parser.add_argument(
-            '-r',
+            "-r",
             type=str,
             metavar="requirement.txt",
-            help="Install from a text file, similar to pip install -r requirements.txt"
+            help=(
+                "Install from a text file, similar to pip install -r"
+                " requirements.txt"
+            ),
         )
 
     def execute(self):
@@ -45,5 +53,7 @@ class Command(Base):
         requirement = self.command_data.get("r")
         if not libs and not requirement:
             libs = config.libraries
-        installed = py_handler.install_libraries(libs, requirements=requirement)[0]
+        installed = py_handler.install_libraries(
+            libs, requirements=requirement
+        )[0]
         config.update(libraries=installed)

@@ -1,5 +1,12 @@
-from pipcx.utils import get_default, read_file, write_file, update_file, check_file_exists
-from test.utils import temp_path, safe_remove_file
+from test.utils import safe_remove_file, temp_path
+
+from pipcx.utils import (
+    check_file_exists,
+    get_default,
+    read_file,
+    update_file,
+    write_file,
+)
 
 
 def test_get_default(temp_path):

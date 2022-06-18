@@ -84,7 +84,7 @@ def update_file(file, text):
     Safely updates a file
     """
     read_text = read_file(file)
-    write_file(file, read_text + '\n' + text)
+    write_file(file, read_text + "\n" + text)
 
 
 def check_dir_exists(*paths):
@@ -103,7 +103,8 @@ class OSEnum(enum.Enum):
     """
     OS Enum
     """
-    LINUX = 'linux'
+
+    LINUX = "linux"
     WIN = "win"
     OSX = "darwin"
 

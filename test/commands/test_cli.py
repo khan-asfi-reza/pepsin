@@ -6,14 +6,14 @@ import pytest
 
 from pipcx.const import COMMAND_NOT_FOUND_ERROR
 from pipcx.main import CLI, main
-from pipcx.utils import get_os, OSEnum
+from pipcx.utils import OSEnum, get_os
 from pipcx.utils.spinner import Spinner
 from pipcx.version import get_version
 
 
 @pytest.fixture
 def path():
-    path = Path(__file__).resolve().parent / 'temp'
+    path = Path(__file__).resolve().parent / "temp"
     os.chdir(path=path)
     return path
 
@@ -21,7 +21,7 @@ def path():
 def test_main_help(monkeypatch, capsys):
     monkeypatch.setattr("sys.argv", ["pipcx", "help"])
     main()
-    assert 'Available commands' in capsys.readouterr().out
+    assert "Available commands" in capsys.readouterr().out
 
 
 def test_main_command_error(monkeypatch, capsys):
@@ -31,13 +31,13 @@ def test_main_command_error(monkeypatch, capsys):
 
 
 def test_main_command_help(monkeypatch):
-    cli = CLI(["pipcx", "init", '-h'])
+    cli = CLI(["pipcx", "init", "-h"])
     output = cli.print_help()
-    assert 'init' in output
+    assert "init" in output
 
 
 def test_main_cli_get_arg(monkeypatch):
-    cli = CLI(["pipcx", "init", '-h'])
+    cli = CLI(["pipcx", "init", "-h"])
     assert cli.get_arg(3) is None
 
 
