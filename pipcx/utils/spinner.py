@@ -17,7 +17,21 @@ class Sequence(Enum):
     BASIC = ["-", "/", "|", "\\"]
     ARROW = ["←", "↖", "↑", "↗", "→", "↘", "↓", "↙"]
     VERT_BAR = ["▁", "▃", "▄", "▅", "▆", "▇", "█", "▇", "▆", "▅", "▄", "▃"]
-    HORIZ_BAR = ["▉", "▊", "▋", "▌", "▍", "▎", "▏", "▎", "▍", "▌", "▋", "▊", "▉"]
+    HORIZ_BAR = [
+        "▉",
+        "▊",
+        "▋",
+        "▌",
+        "▍",
+        "▎",
+        "▏",
+        "▎",
+        "▍",
+        "▌",
+        "▋",
+        "▊",
+        "▉",
+    ]
     SPIN_RECT = ["▖", "▘", "▝", "▗"]
     ELAST_BAR = ["▌", "▀", "▐▄"]
     TETRIS = ["┤", "┘", "┴", "└", "├", "┌", "┬", "┐"]
@@ -45,7 +59,9 @@ class Sequence(Enum):
 class Spinner:
     """A shell spinner"""
 
-    def __init__(self, message="", interval=0.25, sequence="HORIZ_BAR", offset=1):
+    def __init__(
+        self, message="", interval=0.25, sequence="HORIZ_BAR", offset=1
+    ):
         self.stop_running = threading.Event()
         self.spin_thread = threading.Thread(target=self.init_spin)
         self.interval = interval  # speed rotation
