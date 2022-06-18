@@ -1,8 +1,13 @@
 name: Build
 
 on:
-  - push
-  - pull_request
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - *
+
 
 jobs:
   build:

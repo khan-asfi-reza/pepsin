@@ -1,8 +1,10 @@
 """
-Pipcx config module
+Pipcx config handler and system module installer
 """
+from datetime import datetime
 
-from pipcx.utils import YAMLConfig, install_venv, initialize_venv, activate_venv, check_file_exists
+from pipcx.utils import check_file_exists, update_file
+from pipcx.yml import YAMLConfig
 
 
 def get_project_name(**kwargs):
@@ -23,24 +25,6 @@ def format_attr(attr):
     return '' if not attr else attr
 
 
-def initialize_project_config(**kwargs):
-    """
-    Creates base project config file and virtualenv
-    """
-    # Create PipCX Config
-    config = PipcxConfig()
-    # Generate yaml file 'pipcx.yaml'
-    config.update(**kwargs)
-    # Installs virtualenv library
-    venv_dir = kwargs.get("venv", "venv")
-    install_venv()
-    # Initializes virtualenv
-    initialize_venv(venv_dir)
-    # Activates virtualenv
-    activate_venv(venv_dir)
-    # Initialize project file
-
-
 class PipcxConfig:
     """
     PIPCX Config blueprint
@@ -50,18 +34,26 @@ class PipcxConfig:
                  "author",
                  "license",
                  "libraries",
-                 "scripts"]
-
-    conf = YAMLConfig("pipcx.yaml")
+                 "scripts",
+                 "conf"
+                 ]
 
     def __init__(self):
         self.libraries = []
+        self.conf = YAMLConfig("pipcx.yaml")
+        self.venv = "venv"
         conf = self.conf.get_config()
-        for slot in self.__slots__:
+        for slot in self.get_slots():
             setattr(self, slot, conf.get(slot))
 
         if not self.libraries:
             self.libraries = []
+
+    def get_slots(self):
+        """
+        Returns: List of slot excluding conf
+        """
+        return [slot for slot in self.__slots__ if slot != "conf"]
 
     @staticmethod
     def config_exists():
@@ -78,7 +70,7 @@ class PipcxConfig:
         # Update libraries
         self.update_libraries(libs)
         for key in kwargs:
-            if key != 'libraries' and key in self.__slots__:
+            if key != 'libraries' and key in self.get_slots():
                 setattr(self, key, kwargs.get(key))
         # Update configuration and save to yaml
         self.conf.append(**self.format_config())
@@ -107,11 +99,20 @@ class PipcxConfig:
         """
         Return slot configs
         """
-        return {key: format_attr(getattr(self, key)) for key in self.__slots__}
+        return {key: format_attr(getattr(self, key)) for key in self.get_slots()}
 
     def initialize_config(self, **kwargs):
         """
         Initialize project configuration if there is no config
         """
         if not self.config_exists():
-            initialize_project_config(**kwargs)
+            self.update(**kwargs)
+
+
+def handle_failed_libs(failed):
+    """
+    Creates or updates failed installation log
+    """
+    ftext = f'# Module Installation Failed {datetime.now().strftime("%d %B %Y | %H:%M:%S")}'
+    failed.insert(0, ftext)
+    update_file("pipcx.failed.log", "\n".join(failed))

@@ -4,7 +4,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-from pipcx.utils import yaml_to_dict, dict_to_yaml, YAMLConfig
+from pipcx.yml import yaml_to_dict, dict_to_yaml, YAMLConfig
 
 
 @pytest.fixture

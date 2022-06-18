@@ -1,13 +1,13 @@
 """
 Contains Base utility that is required to run the pipcx CLI Class
 """
+import enum
 import functools
 import os
 import pkgutil
-import subprocess
-import sys
 from importlib import import_module
 from pathlib import Path
+from sys import platform
 
 from pipcx.base import Base
 
@@ -44,36 +44,6 @@ def get_commands():
     """
     commands = set(find_commands())
     return commands
-
-
-def pip3_install(package: str) -> None:
-    """
-    Installs package via pip3
-    """
-    subprocess.run(['pip3', 'install', package], check=True)
-
-
-def pip3_upgrade(package: str):
-    """
-    Upgrade package via pip3
-    """
-    subprocess.run(["pip3", "install", "--upgrade", package], check=True)
-
-
-def python_sys_execute(*command) -> None:
-    """
-    Does python -m <command>
-    """
-    python = sys.executable
-    subprocess.run([python, '-m', *command], check=True)
-
-
-def python_exec(*command):
-    """
-    Executes python script
-    """
-    python = sys.executable
-    subprocess.run([python, '-m', *command], check=True)
 
 
 def check_file_exists(file):
@@ -115,3 +85,39 @@ def update_file(file, text):
     """
     read_text = read_file(file)
     write_file(file, read_text + '\n' + text)
+
+
+def check_dir_exists(*paths):
+    """
+    Checks if a particular directory exists or not
+    Args:
+        *paths: Paths to join and check for directory existence
+
+    Returns:
+
+    """
+    return os.path.isdir(os.path.join(*paths))
+
+
+class OSEnum(enum.Enum):
+    """
+    OS Enum
+    """
+    LINUX = 'linux'
+    WIN = "win"
+    OSX = "darwin"
+
+
+def get_os(plt=platform) -> OSEnum:
+    """
+    Returns System OS Platform name
+    """
+    __os = OSEnum.LINUX
+    if plt in ["linux", "linux2"]:
+        __os = OSEnum.LINUX
+    elif plt == "darwin":
+        __os = OSEnum.OSX
+    elif plt in ["win32", "cygwin"]:
+        __os = OSEnum.WIN
+
+    return __os

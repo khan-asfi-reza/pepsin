@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from pipcx.schema import PipcxConfig
+from pipcx.config import PipcxConfig
 from test.utils import safe_remove_file
 
 

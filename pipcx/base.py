@@ -44,6 +44,7 @@ class Base(IOBase, ABC):
         self.templates: TemplateList = TemplateList()
         self.command_data = {}
         self.command_args = None
+        self.argv = []
         super().__init__()
 
     def add_input(self, handler, **options):
@@ -121,6 +122,7 @@ class Base(IOBase, ABC):
         Runner method for command class
         """
         # Get the parser to get cli arguments and process
+        self.argv = argv[2:]
         parser = self.get_parser(program_name=argv[0], command=argv[1])
         data = vars(parser.parse_args(argv[2:]))
         args = data.pop("args", ())
