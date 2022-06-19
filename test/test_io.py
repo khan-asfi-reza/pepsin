@@ -3,7 +3,7 @@ from test.utils import make_multiple_inputs
 
 import pytest
 
-from pepsin.io import Input, InputHandler, IOBase, Output
+from pepsin.base_io import Input, IOBase, Output, PromptHandler
 
 
 @pytest.fixture
@@ -108,7 +108,7 @@ def test_output(capsys):
 
 def test_input_handler(monkeypatch):
     monkeypatch.setattr("builtins.input", lambda _: "test")
-    handler = InputHandler(
+    handler = PromptHandler(
         Input(
             name="name",
             type=str,

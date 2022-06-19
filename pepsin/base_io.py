@@ -18,7 +18,9 @@ import dataclasses
 import sys
 from collections import namedtuple
 from io import TextIOBase
-from typing import Union
+from typing import List, Union
+
+from colorama import Fore, init
 
 
 class OutputWrapper(TextIOBase):
@@ -26,8 +28,16 @@ class OutputWrapper(TextIOBase):
     Wrapper around stdout/stderr
     """
 
+    color_map = {
+        "success": Fore.GREEN,
+        "error": Fore.RED,
+        "warning": Fore.YELLOW,
+        "primary": Fore.CYAN,
+    }
+
     def __init__(self, out, ending="\n"):
         super().__init__()
+        init(autoreset=True)
         self._out = out
         self.ending = ending
 
@@ -35,11 +45,13 @@ class OutputWrapper(TextIOBase):
         if hasattr(self._out, "flush"):
             self._out.flush()
 
-    def write(self, msg="", ending=None):
+    def write(self, msg="", ending=None, msg_type="text", enforce_color=""):
         ending = self.ending if ending is None else ending
         if ending and not msg.endswith(ending):
             msg += ending
-        self._out.write(msg)
+        color = self.color_map.get(msg_type, "")
+        color = enforce_color if enforce_color else color
+        self._out.write(color + msg)
 
 
 class IOBase:
@@ -84,6 +96,7 @@ class CLIIOBase(abc.ABC):
 
     name: str
     title: str
+    skip: bool = False
 
     @abc.abstractmethod
     def prompt(self) -> Union[bool, None, int, str]:
@@ -106,6 +119,8 @@ class Output(IOBase, CLIIOBase):
     Outputs a title while scanning input from the cli
     """
 
+    color: str = ""
+
     def __post_init__(self):
         self.output = OutputWrapper(sys.stdout)
 
@@ -120,7 +135,7 @@ class Output(IOBase, CLIIOBase):
         """
         Outputs title in the cli
         """
-        self.output.write(self.title)
+        self.output.write(self.title, enforce_color=self.color)
 
 
 @dataclasses.dataclass
@@ -133,6 +148,7 @@ class Input(CLIIOBase):
         default: Any | Default value of the input
         required: bool | Is the input required or skip-able
         options: list | Available option list
+        skip: bool | Skips if argument is given
     """
 
     type: type = str
@@ -194,15 +210,26 @@ class Input(CLIIOBase):
         return {self.name: self.prompt()}
 
 
-class InputHandler:
+class PromptHandler:
     """
     Handles group of input together and stores in the object in
     multiple form
     """
 
-    def __init__(self, *inputs):
-        self.__inputs = [*inputs]
+    def __init__(self, *inputs, options=None):
+        self.__inputs: List[Input] = []
+        self.options = options
+        self.add_prompts(*inputs, options=self.options)
         self.__answers = {}
+
+    def update_options(self, options):
+        """
+        Updates Argument option
+
+        Returns:
+
+        """
+        self.options = options
 
     def __len__(self):
         return len(self.__inputs)
@@ -213,21 +240,31 @@ class InputHandler:
         """
         return len(self.__answers) > 0
 
-    def add_input(self, _input: Input):
+    def add_prompt(self, _input: Input, options=None):
         """
         Add one input in the prompt list, that will be
         executed serially
         _input: `Input` Object
         """
+        if not options:
+            options = self.options
+        if options and options.get(_input.name, None) and _input.skip:
+            return
         self.__inputs.append(_input)
 
-    def add_inputs(self, *inputs):
+    def add_prompts(self, *inputs, options=None):
         """
         Add multiple input in the prompt list, that will be
         executed serially
         inputs: List of `Input` Object
         """
-        self.__inputs += list(inputs)
+        if not options:
+            options = self.options
+        self.__inputs += [
+            inp
+            for inp in inputs
+            if not (options and options.get(inp.name, None) and inp.skip)
+        ]
 
     def get_answers(self):
         """
@@ -241,15 +278,14 @@ class InputHandler:
         """
         return self.__answers.get(key, None)
 
-    def prompt(self):
+    def prompt(self, options=None):
         """
         Get input from all the given Input Object
         returns: Dictionary of answers
         """
         for inp in self.__inputs:
-            data = inp.prompt_as_dict()
-            self.__answers.update(**data)
-
+            if not (inp.skip and options and options.get(inp.name, None)):
+                self.__answers.update(inp.prompt_as_dict())
         return self.__answers
 
     @property

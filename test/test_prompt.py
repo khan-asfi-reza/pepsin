@@ -1,24 +1,24 @@
 import pytest
 
-from pepsin.io import Input, InputHandler
+from pepsin.base_io import Input, PromptHandler
 
 
 @pytest.fixture
 def prompt_handler():
-    return InputHandler()
+    return PromptHandler()
 
 
 def test_prompt_handler(prompt_handler, monkeypatch):
     """
     Test prompt handler
     """
-    prompt_handler.add_input(
+    prompt_handler.add_prompt(
         Input(name="name", type=str, title="title", required=False)
     )
     assert prompt_handler.__len__() == 1
     # Test 2
     assert not prompt_handler.is_prompt_complete()
-    prompt_handler.add_inputs(
+    prompt_handler.add_prompts(
         Input(name="title", type=str, title="title", required=False),
         Input(name="age", type=int, title="age", required=False),
     )

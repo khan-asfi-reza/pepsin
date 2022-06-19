@@ -8,9 +8,9 @@ from typing import List
 from urllib import request
 from urllib.error import HTTPError, URLError
 
+from pepsin.base_io import OutputWrapper
 from pepsin.config import PepsinConfig, handle_failed_libs
 from pepsin.const import PIP_DL_LINK
-from pepsin.io import OutputWrapper
 from pepsin.utils import (
     OSEnum,
     check_dir_exists,
@@ -52,7 +52,6 @@ class PyHandler:
         if (not self.venv and not skip_venv) or (
             self.venv and not check_dir_exists(self.venv)
         ):
-            print("Hello World")
             self.venv = get_default(self.venv, "venv")
             self.pepsin_config.update(venv=self.venv)
             self.init_venv(self.venv)
