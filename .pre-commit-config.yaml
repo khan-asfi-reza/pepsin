@@ -10,12 +10,12 @@ repos:
     hooks:
     - id: black
       exclude: \.py-tpl$
-      args: ["pipcx", "test","--config", "pyproject.toml"]
+      args: ["pepsin", "test","--config", "pyproject.toml"]
   - repo: https://github.com/PyCQA/isort
     rev: 5.10.1
     hooks:
       - id: isort
-        args: ["pipcx", "test"]
+        args: ["pepsin", "test"]
   - repo: https://github.com/asottile/pyupgrade
     rev: v2.34.0
     hooks:
