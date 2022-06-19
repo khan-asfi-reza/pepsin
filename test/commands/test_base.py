@@ -17,7 +17,7 @@ def test_base():
 
 
 def test_format_help(test_base):
-    string = test_base.format_help("Test Command", "Test")
+    string = test_base.format_help("Test Command")
     assert "Test Command" in string
 
 
