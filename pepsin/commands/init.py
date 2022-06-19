@@ -28,10 +28,13 @@ Will not take any input
 """
 import os
 from argparse import ArgumentParser
+from typing import Dict
+
+from colorama import Fore
 
 from pepsin.base import Base
+from pepsin.base_io import Input, Output
 from pepsin.config import PepsinConfig, get_project_name
-from pepsin.io import Input
 from pepsin.pyhandler import PyHandler
 from pepsin.template import Template, TemplateList
 
@@ -69,23 +72,23 @@ class Command(Base):
             "--venv", help="Virtual Environment directory name", default="venv"
         )
 
-    def add_input(self, handler, **options):
+    def add_prompts(self, handler, **options):
         """
         Handles prompt input
         """
-        project_name = options.get("name", None)
-
-        if not project_name:
-            handler.add_input(
-                Input(
-                    name="name",
-                    title="Project Name",
-                    default="src",
-                    required=False,
-                )
-            )
-
-        handler.add_inputs(
+        handler.add_prompts(
+            Output(
+                name="Welcome",
+                title=f"Pepsin Setup Project\n{'-'*10}",
+                color=Fore.CYAN,
+            ),
+            Input(
+                name="name",
+                title="Project Name",
+                default="src",
+                required=False,
+                skip=True,
+            ),
             Input(
                 name="author", title="Author", default="Author", required=False
             ),
