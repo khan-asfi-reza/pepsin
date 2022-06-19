@@ -3,7 +3,7 @@ Template handling module
 """
 import os
 
-from pipcx.const import TEMPLATE_DIR
+from pepsin.const import TEMPLATE_DIR
 
 
 class TemplateDoesNotExistError(Exception):

@@ -2,8 +2,8 @@ from typing import Union
 
 import pytest
 
-from pipcx.base import Base
-from pipcx.error import InvalidCommandError
+from pepsin.base import Base
+from pepsin.error import InvalidCommandError
 
 
 class CommandTest(Base):
@@ -28,6 +28,6 @@ def mock_exit(code):
 def test_error(test_base, monkeypatch):
     monkeypatch.setattr("sys.exit", mock_exit)
     try:
-        test_base.run(argv=["pipcx", "command"])
+        test_base.run(argv=["pepsin", "command"])
     except InvalidCommandError as e:
         assert e.return_code == 1

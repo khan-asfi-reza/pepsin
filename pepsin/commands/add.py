@@ -1,7 +1,7 @@
 """
 Similar to install
 """
-from pipcx.commands.install import Command as InstallCommand
+from pepsin.commands.install import Command as InstallCommand
 
 
 class Command(InstallCommand):
@@ -11,6 +11,6 @@ class Command(InstallCommand):
 
     short_description = "Install library"
     help = """Install a particular or multiple libraries
-    `$pipcx install <library>`
-    Example: `$pipcx install django`
+    `$pepsin install <library>`
+    Example: `$pepsin install django`
     """

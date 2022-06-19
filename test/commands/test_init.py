@@ -3,8 +3,8 @@ from test.utils import command_path, make_multiple_inputs
 
 import pytest
 
-from pipcx.commands.init import Command as InitCommand
-from pipcx.main import CLI
+from pepsin.commands.init import Command as InitCommand
+from pepsin.main import CLI
 
 
 @pytest.fixture
@@ -21,11 +21,11 @@ def test_init_with_option_args(init_command, monkeypatch):
         ),
     )
     # Run the command
-    init_command.run(["pipcx", "init", "--venv=testvenv"])
+    init_command.run(["pepsin", "init", "--venv=testvenv"])
     # Check directories
     assert os.path.isdir("testvenv")
     assert os.path.isdir("testproject")
-    assert os.path.isfile("pipcx.yaml")
+    assert os.path.isfile("pepsin.yaml")
     assert os.path.isfile("testproject/main.py")
     assert os.path.isfile("Readme.MD")
     assert os.path.isfile(".gitignore")
@@ -33,7 +33,7 @@ def test_init_with_option_args(init_command, monkeypatch):
 
 def test_init_with_predefined_files_no_input(init_command, monkeypatch):
     cli = CLI(
-        ["pipcx", "init", "testproject", "--venv=testvenv", "--no-input"]
+        ["pepsin", "init", "testproject", "--venv=testvenv", "--no-input"]
     )
     # Set input parameter
     os.mkdir("testproject")
@@ -45,7 +45,7 @@ def test_init_with_predefined_files_no_input(init_command, monkeypatch):
     # Check directories
     assert os.path.isdir("testvenv")
     assert os.path.isdir("testproject")
-    assert os.path.isfile("pipcx.yaml")
+    assert os.path.isfile("pepsin.yaml")
     assert os.path.isfile("testproject/main.py")
     assert os.path.isfile("Readme.MD")
     assert os.path.isfile(".gitignore")
@@ -56,7 +56,7 @@ def test_init_with_predefined_files_no_input(init_command, monkeypatch):
 
 
 def test_init_with_predefined_files(monkeypatch):
-    cli = CLI(["pipcx", "init", "testproject", "--venv=testvenv"])
+    cli = CLI(["pepsin", "init", "testproject", "--venv=testvenv"])
     # Set input parameter
     monkeypatch.setattr(
         "builtins.input",
@@ -72,7 +72,7 @@ def test_init_with_predefined_files(monkeypatch):
     # Check directories
     assert os.path.isdir("testvenv")
     assert os.path.isdir("testproject")
-    assert os.path.isfile("pipcx.yaml")
+    assert os.path.isfile("pepsin.yaml")
     assert os.path.isfile("Readme.MD")
     assert os.path.isfile(".gitignore")
     assert os.path.isfile("testproject/main.py")

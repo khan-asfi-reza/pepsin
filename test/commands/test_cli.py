@@ -4,11 +4,11 @@ from pathlib import Path
 
 import pytest
 
-from pipcx.const import COMMAND_NOT_FOUND_ERROR
-from pipcx.main import CLI, main
-from pipcx.utils import OSEnum, get_os
-from pipcx.utils.spinner import Spinner
-from pipcx.version import get_version
+from pepsin.const import COMMAND_NOT_FOUND_ERROR
+from pepsin.main import CLI, main
+from pepsin.utils import OSEnum, get_os
+from pepsin.utils.spinner import Spinner
+from pepsin.version import get_version
 
 
 @pytest.fixture
@@ -19,30 +19,30 @@ def path():
 
 
 def test_main_help(monkeypatch, capsys):
-    monkeypatch.setattr("sys.argv", ["pipcx", "help"])
+    monkeypatch.setattr("sys.argv", ["pepsin", "help"])
     main()
     assert "Available commands" in capsys.readouterr().out
 
 
 def test_main_command_error(monkeypatch, capsys):
-    monkeypatch.setattr("sys.argv", ["pipcx", "ins"])
+    monkeypatch.setattr("sys.argv", ["pepsin", "ins"])
     main()
     assert COMMAND_NOT_FOUND_ERROR in capsys.readouterr().err
 
 
 def test_main_command_help(monkeypatch):
-    cli = CLI(["pipcx", "init", "-h"])
+    cli = CLI(["pepsin", "init", "-h"])
     output = cli.print_help()
     assert "init" in output
 
 
 def test_main_cli_get_arg(monkeypatch):
-    cli = CLI(["pipcx", "init", "-h"])
+    cli = CLI(["pepsin", "init", "-h"])
     assert cli.get_arg(3) is None
 
 
 def test_version(capsys):
-    cli = CLI(["pipcx", "--version"])
+    cli = CLI(["pepsin", "--version"])
     cli.execute()
     assert get_version() in capsys.readouterr().out
 

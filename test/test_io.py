@@ -3,7 +3,7 @@ from test.utils import make_multiple_inputs
 
 import pytest
 
-from pipcx.io import Input, InputHandler, IOBase, Output
+from pepsin.io import Input, InputHandler, IOBase, Output
 
 
 @pytest.fixture

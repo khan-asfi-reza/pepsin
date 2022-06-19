@@ -1,2 +1,2 @@
 include requirements.txt
-include pipcx/templates/*
+include pepsin/templates/*

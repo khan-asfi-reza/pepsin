@@ -1,4 +1,4 @@
-from pipcx.config import get_project_name
+from pepsin.config import get_project_name
 
 
 def test_get_project_name():

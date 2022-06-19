@@ -3,8 +3,8 @@ PIP Command module
 """
 from argparse import ArgumentParser
 
-from pipcx.base import Base
-from pipcx.pyhandler import PyHandler
+from pepsin.base import Base
+from pepsin.pyhandler import PyHandler
 
 
 class Command(Base):
@@ -12,7 +12,7 @@ class Command(Base):
     Executes Pip command
     Examples:
         `pip --h` now can be written as
-        `pipcx pip --h`
+        `pepsin pip --h`
     """
 
     def add_argument(self, parser: ArgumentParser):

@@ -1,7 +1,7 @@
 """
 Upgrade alias
 """
-from pipcx.commands.upgrade import Command as UpgradeCommand
+from pepsin.commands.upgrade import Command as UpgradeCommand
 
 
 class Command(UpgradeCommand):

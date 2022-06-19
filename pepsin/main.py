@@ -4,10 +4,10 @@ Main File where the main function and CLI Class is executed and defined
 import os
 import sys
 
-from pipcx.const import COMMAND_NOT_FOUND_ERROR
-from pipcx.io import IOBase
-from pipcx.utils.base import get_commands, load_command_class
-from pipcx.version import get_version
+from pepsin.const import COMMAND_NOT_FOUND_ERROR
+from pepsin.io import IOBase
+from pepsin.utils.base import get_commands, load_command_class
+from pepsin.version import get_version
 
 
 class CLI(IOBase):
@@ -21,7 +21,7 @@ class CLI(IOBase):
         self.program_name = os.path.basename(self.argv[0])
 
         if self.program_name == "__main__.py":
-            self.program_name = "python -m pipcx"
+            self.program_name = "python -m pepsin"
 
         try:
             self.command = self.argv[1]
@@ -45,7 +45,7 @@ class CLI(IOBase):
         version = get_version()
         if self.command in ["--help", "-h", "help"]:
             string = [
-                f"pipcx v{version}",
+                f"pepsin v{version}",
                 "Type the name of the command and --help for help on a"
                 " specific command",
                 "",

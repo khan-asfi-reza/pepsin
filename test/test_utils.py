@@ -1,6 +1,6 @@
 from test.utils import safe_remove_file, temp_path
 
-from pipcx.utils import (
+from pepsin.utils import (
     check_file_exists,
     get_default,
     read_file,

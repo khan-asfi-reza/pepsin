@@ -3,10 +3,10 @@ This module handles library Upgrade
 """
 from argparse import ArgumentParser
 
-from pipcx.base import Base
-from pipcx.config import PipcxConfig
-from pipcx.pyhandler import PyHandler
-from pipcx.utils import get_default
+from pepsin.base import Base
+from pepsin.config import PepsinConfig
+from pepsin.pyhandler import PyHandler
+from pepsin.utils import get_default
 
 
 class Command(Base):
@@ -35,8 +35,8 @@ class Command(Base):
         """
         Installs library
         """
-        # Pipcx Config instance
-        config = PipcxConfig()
+        # pepsin Config instance
+        config = PepsinConfig()
         # If venv and no config is initialized then create venv and config
         config.initialize_config()
         py_handler = PyHandler(config)

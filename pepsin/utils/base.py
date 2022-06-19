@@ -1,5 +1,5 @@
 """
-Contains Base utility that is required to run the pipcx CLI Class
+Contains Base utility that is required to run the pepsin CLI Class
 """
 import enum
 import functools
@@ -9,7 +9,7 @@ from importlib import import_module
 from pathlib import Path
 from sys import platform
 
-from pipcx.base import Base
+from pepsin.base import Base
 
 ROOT = Path(__file__).resolve().parent
 
@@ -32,7 +32,7 @@ def load_command_class(name) -> Base:
     Every Command module has a Command class, which will be imported
     :return Command Class
     """
-    module = import_module(f"pipcx.commands.{name}")
+    module = import_module(f"pepsin.commands.{name}")
     return module.Command()
 
 

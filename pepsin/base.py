@@ -5,10 +5,10 @@ import sys
 from abc import ABC, abstractmethod
 from argparse import ArgumentParser
 
-from pipcx.error import InvalidCommandError
-from pipcx.io import InputHandler, IOBase
-from pipcx.template import TemplateList
-from pipcx.version import get_version
+from pepsin.error import InvalidCommandError
+from pepsin.io import InputHandler, IOBase
+from pepsin.template import TemplateList
+from pepsin.version import get_version
 
 
 class Base(IOBase, ABC):

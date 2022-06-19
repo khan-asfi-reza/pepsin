@@ -3,8 +3,8 @@ from test.utils import command_path
 
 import pytest
 
-from pipcx.pyhandler import PyHandler
-from pipcx.utils import write_file
+from pepsin.pyhandler import PyHandler
+from pepsin.utils import write_file
 
 
 @pytest.fixture
@@ -13,7 +13,7 @@ def py_handler():
 
 
 def test_py_handler_python_exec(py_handler):
-    write_file("py_init.py", "print('pipcx')")
+    write_file("py_init.py", "print('pepsin')")
     py_handler.python_execute("py_init.py")
 
 
