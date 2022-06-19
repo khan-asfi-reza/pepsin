@@ -4,8 +4,8 @@ Main File where the main function and CLI Class is executed and defined
 import os
 import sys
 
+from pepsin.base_io import IOBase
 from pepsin.const import COMMAND_NOT_FOUND_ERROR
-from pepsin.io import IOBase
 from pepsin.utils.base import get_commands, load_command_class
 from pepsin.version import get_version
 
@@ -53,12 +53,12 @@ class CLI(IOBase):
             ]
             for command in get_commands():
                 command_class = load_command_class(command)
-                string.append(f"{command} : {command_class.short_description}")
+                string.append(f"{command} | {command_class.short_description}")
 
             return "\n".join(string)
 
         command_class = load_command_class(self.command)
-        return command_class.format_help(self.program_name, self.command)
+        return command_class.format_help(self.command)
 
     def execute(self):
         """
