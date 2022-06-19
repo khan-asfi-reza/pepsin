@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from pipcx.utils import OSEnum, check_dir_exists, get_os
+from pepsin.utils import OSEnum, check_dir_exists, get_os
 
 
 def make_multiple_inputs(inputs: list):
@@ -62,8 +62,8 @@ def command_path():
     os.chdir(path=path)
     safe_remove_dir("__TEST__")
     safe_remove_dir("venv")
-    safe_remove_file("pipcx.yaml")
-    safe_remove_file("pipcx.failed.log")
+    safe_remove_file("pepsin.yaml")
+    safe_remove_file("pepsin.failed.log")
 
 
 def get_installed_libs_in_venv(venv_name):

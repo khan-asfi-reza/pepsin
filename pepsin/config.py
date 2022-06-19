@@ -1,10 +1,10 @@
 """
-Pipcx config handler and system module installer
+pepsin config handler and system module installer
 """
 from datetime import datetime
 
-from pipcx.utils import check_file_exists, update_file
-from pipcx.yml import YAMLConfig
+from pepsin.utils import check_file_exists, update_file
+from pepsin.yml import YAMLConfig
 
 
 def get_project_name(**kwargs):
@@ -25,9 +25,9 @@ def format_attr(attr):
     return "" if not attr else attr
 
 
-class PipcxConfig:
+class PepsinConfig:
     """
-    PIPCX Config blueprint
+    pepsin Config blueprint
     """
 
     __slots__ = [
@@ -42,7 +42,7 @@ class PipcxConfig:
 
     def __init__(self):
         self.libraries = []
-        self.__conf = YAMLConfig("pipcx.yaml")
+        self.__conf = YAMLConfig("pepsin.yaml")
         self.venv = "venv"
         self.set_config()
 
@@ -84,7 +84,7 @@ class PipcxConfig:
         """
         Checks if yaml config exists or not
         """
-        return check_file_exists("pipcx.yaml")
+        return check_file_exists("pepsin.yaml")
 
     def update(self, **kwargs):
         """
@@ -159,4 +159,4 @@ def handle_failed_libs(failed, action_msg="Module Installation Failed"):
         f"# {action_msg}" f' {datetime.now().strftime("%d %B %Y | %H:%M:%S")}'
     )
     failed.insert(0, ftext)
-    update_file("pipcx.failed.log", "\n".join(failed))
+    update_file("pepsin.failed.log", "\n".join(failed))

@@ -1,4 +1,4 @@
-from pipcx.template import Template, TemplateDoesNotExistError
+from pepsin.template import Template, TemplateDoesNotExistError
 
 
 def test_template_does_not_exist():

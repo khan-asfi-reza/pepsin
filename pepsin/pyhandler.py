@@ -8,10 +8,10 @@ from typing import List
 from urllib import request
 from urllib.error import HTTPError, URLError
 
-from pipcx.config import PipcxConfig, handle_failed_libs
-from pipcx.const import PIP_DL_LINK
-from pipcx.io import OutputWrapper
-from pipcx.utils import (
+from pepsin.config import PepsinConfig, handle_failed_libs
+from pepsin.const import PIP_DL_LINK
+from pepsin.io import OutputWrapper
+from pepsin.utils import (
     OSEnum,
     check_dir_exists,
     check_file_exists,
@@ -28,33 +28,33 @@ class PyHandler:
     """
 
     def __init__(
-        self, pipcx_config=None, stdout=None, stderr=None, skip_venv=False
+        self, pepsin_config=None, stdout=None, stderr=None, skip_venv=False
     ):
         """
         Save env variable and set env variable to run code
         Using venv
         Args:
-            pipcx_config: PipcxConfig Instance
+            pepsin_config: pepsinConfig Instance
             stdout: OutputWrapper(sys.stdout) Instance
             stderr: OutputWrapper(sys.stderr) Instance
             skip_venv: Skip initializing venv on init
         """
-        # Read pipcx config to get venv
+        # Read pepsin config to get venv
         self.output = stdout if stdout else OutputWrapper(sys.stdout)
         self.error = stderr if stderr else OutputWrapper(sys.stderr)
         self.executable = "python" if get_os() == OSEnum.WIN else "python3"
         self.pip_exec = "pip" if get_os() == OSEnum.WIN else "pip3"
-        self.pipcx_config = pipcx_config if pipcx_config else PipcxConfig()
+        self.pepsin_config = pepsin_config if pepsin_config else PepsinConfig()
         self.env = os.environ.copy()
 
-        self.venv = self.pipcx_config.venv
+        self.venv = self.pepsin_config.venv
         # Create virtualenv if not exist
         if (not self.venv and not skip_venv) or (
             self.venv and not check_dir_exists(self.venv)
         ):
             print("Hello World")
             self.venv = get_default(self.venv, "venv")
-            self.pipcx_config.update(venv=self.venv)
+            self.pepsin_config.update(venv=self.venv)
             self.init_venv(self.venv)
 
         self.set_env()

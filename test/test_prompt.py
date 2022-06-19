@@ -1,6 +1,6 @@
 import pytest
 
-from pipcx.io import Input, InputHandler
+from pepsin.io import Input, InputHandler
 
 
 @pytest.fixture

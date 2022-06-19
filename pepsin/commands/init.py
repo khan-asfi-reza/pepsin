@@ -1,7 +1,7 @@
 """
 Init Command
 Usage:
-    `pipcx init`
+    `pepsin init`
 
 Generates a python boilerplate normal project along
 with virtual environment.
@@ -17,7 +17,7 @@ and will create a project folder under the name
 
 Optional Parameters:
 
-`pipcx init my_project`
+`pepsin init my_project`
 Will create project without asking for project_name
 
 `--venv=myVenv`
@@ -29,14 +29,14 @@ Will not take any input
 import os
 from argparse import ArgumentParser
 
-from pipcx.base import Base
-from pipcx.config import PipcxConfig, get_project_name
-from pipcx.io import Input
-from pipcx.pyhandler import PyHandler
-from pipcx.template import Template, TemplateList
+from pepsin.base import Base
+from pepsin.config import PepsinConfig, get_project_name
+from pepsin.io import Input
+from pepsin.pyhandler import PyHandler
+from pepsin.template import Template, TemplateList
 
 MAIN_FILE = ""
-"""# Generated with pipcx
+"""# Generated with pepsin
 
 if __name__ == "__main__":
     print("Egg and spam")
@@ -144,7 +144,7 @@ class Command(Base):
         """
         Inherited execute method
         """
-        conf = PipcxConfig()
+        conf = PepsinConfig()
         conf.update(**self.command_data)
         PyHandler(conf, self.stdout, self.stderr)
         # Installs virtualenv library
