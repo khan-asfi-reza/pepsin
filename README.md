@@ -1,8 +1,8 @@
 <div align="center">
-    <h1>Pipcx</h1>
+    <h1>pepsin</h1>
     <div style="gap:10px;display: flex; justify-content: center" align="center">
-        <img src="https://github.com/khan-asfi-reza/pipcx/actions/workflows/development.yaml/badge.svg" alt="">
-        <img src="https://codecov.io/gh/khan-asfi-reza/pipcx/branch/master/graph/badge.svg?token=BS5ZJN8ZRI" alt="">
+        <img src="https://github.com/khan-asfi-reza/pepsin/actions/workflows/development.yaml/badge.svg" alt="">
+        <img src="https://codecov.io/gh/khan-asfi-reza/pepsin/branch/master/graph/badge.svg?token=BS5ZJN8ZRI" alt="">
         <img src="https://img.shields.io/badge/code%20style-pep8-orange.svg" alt="">
         <img src="https://img.shields.io/badge/linting-pylint-green" alt="">
 </div>
@@ -28,9 +28,9 @@ So primary goal is to -
 4. File generation based on templates (tox, pytest)
 5. Dockerizing and customization hook
 
-Pipcx's code structure is heavily inspired by `django.core.management`
-pipcx implements almost the similar strategy of code writing and work process.
-Pipcx cli library is written using builtin libraries like `argparse` `importlib` `pkgutil` `sys` `os` etc.
+pepsin's code structure is heavily inspired by `django.core.management`
+pepsin implements almost the similar strategy of code writing and work process.
+pepsin cli library is written using builtin libraries like `argparse` `importlib` `pkgutil` `sys` `os` etc.
 For storing libraries and managing dependencies, `yaml` file has been selected
 as it has a very basic and minimalistic syntax.
 
@@ -41,13 +41,13 @@ as it has a very basic and minimalistic syntax.
 ## Installation
 
 ```shell
-$ pip3 install pipcx
+$ pip3 install pepsin
 ```
 ## Before use
 
-Pipcx generates or uses `pipcx.yaml` file to store
+pepsin generates or uses `pepsin.yaml` file to store
 all your metadata, project configuration, project libraries and dependencies
-`pipcx.yaml` config file
+`pepsin.yaml` config file
 ```yaml
 name: GameOfChairs # Name of the project
 author: Khan Asfi Reza # Author's name
@@ -62,19 +62,19 @@ libraries:
   - django-channels
 ```
 
-If any failure or error occurs a `failed.pipcx.log` will be created mentioning the problem
+If any failure or error occurs a `failed.pepsin.log` will be created mentioning the problem
 
 ## Usage
 
 ### 1. `init`
 ```shell
-$ pipcx init
+$ pepsin init
 ```
 Init command generates basic python project to get start with,
 It will interactively ask you to fill the required fields
 ```shell
-$ pipcx init
-$ Pipcx Generate Project
+$ pepsin init
+$ pepsin Generate Project
 $ ----------------------
 $ Project Name[project]:
 $ Author[]:
@@ -86,7 +86,7 @@ File structure
 ```
 Project  Directory
 |____ venv
-|____ pipcx.yaml
+|____ pepsin.yaml
 |____ Readme.md
 |____ .gitignore
 |____ project
@@ -95,11 +95,11 @@ Project  Directory
 ```
 
 #### Optional Arguments:
-`name` the name of the project and pipcx will create a project with the given project name
+`name` the name of the project and pepsin will create a project with the given project name
 
 Example:
 ```shell
-$ pipcx init project_name
+$ pepsin init project_name
 ```
 
 #### Options
@@ -117,23 +117,32 @@ Command Alias: `add` `i`
 Install required dependencies and libraries
 
 ```shell
-$ pipcx install django
+$ pepsin install django
 ```
 or
 ```shell
-$ pipcx i django
+$ pepsin i django
 ```
 or
 ```shell
-$ pipcx add django
+$ pepsin add django
 ```
 Also `text` file with list of libraries can be installed with `-r` flag
 ```shell
-$ pipcx install -r requirements.txt
+$ pepsin install -r requirements.txt
 ```
-Note: install command will by default create a `pipcx.yaml` file and a virtualenv directory named `venv`
+Note: install command will by default create a `pepsin.yaml` file and a virtualenv directory named `venv`
 
 |option|description|type|required|default|
 |---|---|---|---|---|
 |-r|Install from the given requirements file|string|false|null|
 |--h|Help text|boolean|false|
+
+
+### 3. `uninstall`
+
+Uninstall a library that is installed in your envrionment
+
+```shell
+$ pepsin uninstall
+```
