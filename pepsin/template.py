@@ -2,19 +2,15 @@
 Template handling module
 """
 import os
+from typing import List
 
 from pepsin.const import TEMPLATE_DIR
-
-
-class TemplateDoesNotExistError(Exception):
-    """
-    Template Non Existence Error
-    """
+from pepsin.error import TemplateDoesNotExistError
 
 
 class Template:
     """
-    Template class that is used to save and format Template Files
+    Template class to save and format Template Files
     """
 
     def __init__(self, template_name, save_as=None, context=None):
@@ -25,7 +21,10 @@ class Template:
 
     def read(self):
         """
-        Reads templates file
+        Reads a given template file and saves template file data
+        to self.file
+        Returns:
+
         """
         temp_name = TEMPLATE_DIR / self.template_name
 
@@ -48,6 +47,9 @@ class Template:
         While initializing `Template` class along with context parameter
         Template("templates.py", context={"file": "FooFile"})
         'save' method will save the file where $file will be replaced with FooFile
+
+        Returns:
+
         """
         for key, val in self.context.items():
             self.file.replace(f"${key}", val)
@@ -55,6 +57,7 @@ class Template:
     def save(self):
         """
         Saves templates in the working directory
+        Returns:
         """
         self.read()
         self.format()
@@ -68,21 +71,29 @@ class Template:
 
 class TemplateList:
     """
-    List of templates that needs to be handled
+    Template List DataStructure
     """
 
     def __init__(self):
-        self.templates = []
+        self.templates: List[Template] = []
 
     def add_template(self, *args):
         """
-        Adds template in the template queue
+        Adds templates in the queue
+        Args:
+            *args: List[Templates] list of templates
+
+        Returns:
+
         """
         self.templates += args
 
     def save(self):
         """
-        Saves all template
+        Executes the template.save() method for
+        all the given templates
+        Returns:
+
         """
         for template in self.templates:
             template.save()
