@@ -32,7 +32,7 @@ def test_main_command_error(monkeypatch, capsys):
 
 def test_main_command_help(monkeypatch):
     cli = CLI(["pepsin", "init", "-h"])
-    output = cli.print_help()
+    output = cli.help_text()
     assert "init" in output
 
 

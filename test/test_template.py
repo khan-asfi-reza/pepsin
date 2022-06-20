@@ -1,4 +1,5 @@
-from pepsin.template import Template, TemplateDoesNotExistError
+from pepsin.error import TemplateDoesNotExistError
+from pepsin.template import Template
 
 
 def test_template_does_not_exist():

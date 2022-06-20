@@ -4,24 +4,30 @@ dictionary to yaml
 """
 import copy
 import os
+from typing import Any
 
 import yaml
 
 
-def dict_to_yaml(_dict, filename):
+def dict_to_yaml(_dict: dict, filename: str):
     """
     Converts dictionary to yaml
-    _dict: Python dictionary or hash map
-    filename: Name of yaml file
+    Args:
+        _dict: Python dictionary or hash map
+        filename: Name of yaml file
+    Returns:
+
     """
     with open(filename, "w", encoding="utf-8") as file:
         yaml.dump(_dict, file, sort_keys=False)
 
 
-def yaml_to_dict(filename) -> dict:
+def yaml_to_dict(filename: str) -> dict:
     """
     Converts yaml  to  dictionary
-    filename: Name of yaml file
+    Args:
+        filename: Name of yaml file
+
     """
     with open(filename, "r", encoding="utf-8") as file:
         return yaml.load(file, yaml.Loader)
@@ -30,9 +36,14 @@ def yaml_to_dict(filename) -> dict:
 class YAMLConfig:
     """
     Yaml Model controller
+    1. Reads yaml file
+    2. Saves dictionary to yaml
+    3. Reads and stores yaml as dictionary
+    4. Appends data to the yaml
+    5. Removes data from the yaml
     """
 
-    def __init__(self, filename="temp.yaml", **kwargs):
+    def __init__(self, filename: str = "temp.yaml", **kwargs):
         self.__config = {}
         self.__filename = ""
         self.__filename = filename
@@ -41,15 +52,18 @@ class YAMLConfig:
 
     def __read_yaml(self):
         """
-        Reads yaml file
+        Reads yaml and converts to dictionary and stores it to
+        self.__config
+        Returns: None
         """
         if os.path.isfile(self.__filename):
             yaml_data = yaml_to_dict(self.__filename)
             self.append(**yaml_data)
 
-    def read_from_yaml(self):
+    def read_from_yaml(self) -> dict:
         """
-        Reads directly from yaml file
+        Reads directly from the yaml
+        Returns: Yaml Config dictionary
         """
         if os.path.isfile(self.__filename):
             return yaml_to_dict(self.__filename)
@@ -57,39 +71,42 @@ class YAMLConfig:
 
     def append(self, **kwargs):
         """
-        Inserts config data in the config dictionary
+        Inserts data in the config dictionary
+        Returns: None
         """
         self.__config.update(**kwargs)
         for key, val in self.__config.items():
             setattr(self, key, val)
 
-    def remove(self, key):
+    def remove(self, key) -> Any:
         """
-        Removes data from config
+        Removes a given key from the config
+        Returns: Any | Removed element from the config
         """
         return self.__config.pop(key)
 
-    def get(self, key):
+    def get(self, key) -> Any:
         """
-        Gets config using key
+        Returns: Any | Any given element using the key
         """
-        return self.__config.get(key, None)
+        return self.__config.setdefault(key, None)
 
-    def get_config(self):
+    def get_config(self) -> dict:
         """
-        Returns the config
+        Returns: Dict | returns the copy of the config
         """
         return copy.deepcopy(self.__config)
 
-    def get_filename(self):
+    def get_filename(self) -> str:
         """
-        Returns the filename
+        Returns: str | Yaml Filename
         """
         return self.__filename
 
     def save(self):
         """
-        Saves config in the yaml file
+        Saves updated config to the yaml file
+        Returns: Dict | self.__config - Yaml config file
         """
         dict_to_yaml(self.__config, self.__filename)
-        return self.__config
+        return self.get_config()

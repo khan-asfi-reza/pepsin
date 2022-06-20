@@ -1,8 +1,9 @@
 """
-Main File where the main function and CLI Class is executed and defined
+Pepsin Main CLI Program, the cli entrypoint
 """
 import os
 import sys
+from typing import List, Optional
 
 from pepsin.base_io import IOBase
 from pepsin.const import COMMAND_NOT_FOUND_ERROR
@@ -12,12 +13,13 @@ from pepsin.version import get_version
 
 class CLI(IOBase):
     """
-    CLI Class that will run the execute command
+    CLI Class that handles cli arguments, parses them
+    and runs command through execute method
     """
 
     def __init__(self, argv=None):
         super().__init__()
-        self.argv = sys.argv[:] if not argv else argv
+        self.argv: List[str] = sys.argv[:] if not argv else argv
         self.program_name = os.path.basename(self.argv[0])
 
         if self.program_name == "__main__.py":
@@ -28,19 +30,27 @@ class CLI(IOBase):
         except IndexError:
             self.command = "help"
 
-    def get_arg(self, index):
+    def get_arg(self, index: int) -> Optional[str]:
         """
-        index: System Argument List index
-        Returns System Argument safely and IndexError is handled
+        Gets argument with index, if index out of range
+        then return None
+        Args:
+            index: int | List index
+
+        Returns: argument string or none
+
         """
         try:
             return self.argv[index]
         except IndexError:
             return None
 
-    def print_help(self) -> str:
+    def help_text(self) -> str:
         """
-        Returns Help Text
+        Gets all available commands and format them to build help text
+        which contains the name of the command and short description of it
+        Returns: str | List of commands with short description
+
         """
         version = get_version()
         if self.command in ["--help", "-h", "help"]:
@@ -62,10 +72,12 @@ class CLI(IOBase):
 
     def execute(self):
         """
-        Executes the commands or throws error or prints help text
+        CLI Execute method / Main execution method
+        Returns: None
+
         """
         if self.command in ["--help", "-h", "help"]:
-            help_text = self.print_help()
+            help_text = self.help_text()
             self.output(help_text)
 
         elif self.command == "--version" or self.argv[1:] == "--version":
@@ -83,7 +95,9 @@ class CLI(IOBase):
 
 def main():
     """
-    Main code runner function
+    Driver function
+    Returns:
+
     """
     runner = CLI()
     runner.execute()
