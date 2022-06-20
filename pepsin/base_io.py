@@ -1,17 +1,6 @@
 """
 A module for input output handling,
-1. ```OutputWrapper```:
-    Handles system standard output, helps to write text
-    in the cli and show errors
-2. ```IOBase```:
-    Is a superclass for Command Classes, that will have
-    direct access to the output and error method to show text
-    in the cli
-3. ```Input```:
-    Modified `builtins.input` class to obtain proper modified
-    data from the cli
-4. ```PromptHandler```:
-    Handles multiple `Input` and obtain answers and organizes it
+_TODO: Use Rich Library
 """
 import abc
 import dataclasses
@@ -25,7 +14,7 @@ from colorama import Fore, init
 
 class OutputWrapper(TextIOBase):
     """
-    Wrapper around stdout/stderr
+    Output wrapper that uses std.out and enforces color
     """
 
     color_map = {
@@ -35,17 +24,39 @@ class OutputWrapper(TextIOBase):
         "primary": Fore.CYAN,
     }
 
-    def __init__(self, out, ending="\n"):
+    def __init__(self, out: TextIOBase, ending: str = "\n"):
         super().__init__()
         init(autoreset=True)
         self._out = out
         self.ending = ending
 
     def flush(self):
+        """
+        Flush out text
+        Returns:
+
+        """
         if hasattr(self._out, "flush"):
             self._out.flush()
 
-    def write(self, msg="", ending=None, msg_type="text", enforce_color=""):
+    def write(
+        self,
+        msg: str = "",
+        ending: str = None,
+        msg_type: str = "text",
+        enforce_color: str = "",
+    ):
+        """
+        Outputs text
+        Args:
+            msg: str | Msg that will be in the output
+            ending: str | Ending of the msg
+            msg_type: str | Options - success, error, warning, primary
+            enforce_color: str | Color of the text
+
+        Returns:
+
+        """
         ending = self.ending if ending is None else ending
         if ending and not msg.endswith(ending):
             msg += ending
