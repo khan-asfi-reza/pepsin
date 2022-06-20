@@ -4,7 +4,7 @@ This module handles python and pip execution
 import os
 import subprocess
 import sys
-from typing import List
+from typing import List, Optional
 from urllib import request
 from urllib.error import HTTPError, URLError
 
@@ -28,7 +28,11 @@ class PyHandler:
     """
 
     def __init__(
-        self, pepsin_config=None, stdout=None, stderr=None, skip_venv=False
+        self,
+        pepsin_config: PepsinConfig = None,
+        stdout: OutputWrapper = None,
+        stderr: OutputWrapper = None,
+        skip_venv: bool = False,
     ):
         """
         Save env variable and set env variable to run code
@@ -92,24 +96,33 @@ class PyHandler:
     def python_execute(self, *commands):
         """
         Executes python command
+        Returns:
         """
         subprocess.check_call([self.executable, *commands], env=self.env)
 
-    def init_venv(self, venv_dir):
+    def init_venv(self, venv_dir: str):
         """
         Initializes virtualenv directory
+        Returns:
         """
         self.python_execute("-m", "virtualenv", venv_dir)
 
     def pip_execute(self, *commands):
         """
         Executes pip command
+        Returns:
+
         """
         subprocess.check_call([self.pip_exec, *commands], env=self.env)
 
     def pip_install(self, *packages):
         """
-        Installs packages through pip
+        Installs package using pip
+        Args:
+            *packages:
+
+        Returns:
+
         """
         subprocess.check_call(
             [self.pip_exec, "install", *packages], env=self.env
@@ -117,9 +130,14 @@ class PyHandler:
 
     def pip_upgrade(self, *packages):
         """
-        Upgrades pip package
+        Upgrade python packages using pip
+        Args:
+            *packages: List[str]
+
+        Returns:
+
         """
-        package_list = list(packages)
+        package_list: List[str] = list(packages)
         # This part of the code safely upgrades pip
         # Default upgrade can cause unusual pip behaviors
         has_pip = False
@@ -141,7 +159,7 @@ class PyHandler:
         )
 
     def __process_library(
-        self, action, libs=None, requirements=""
+        self, action: str, libs: Optional[List[str]] = None, requirements=""
     ) -> (List[str], List[str]):
         """
         Process library with action
@@ -180,7 +198,7 @@ class PyHandler:
         return passed, failed
 
     def install_libraries(
-        self, libs=None, requirements=""
+        self, libs: Optional[List[str]] = None, requirements=""
     ) -> (List[str], List[str]):
         """
         Installs multiple libraries
@@ -192,7 +210,9 @@ class PyHandler:
         """
         return self.__process_library("install", libs, requirements)
 
-    def upgrade_libraries(self, libs=None, requirements=""):
+    def upgrade_libraries(
+        self, libs: Optional[List[str]] = None, requirements=""
+    ) -> (List[str], List[str]):
         """
         Upgrades multiple libraries
         Args:
