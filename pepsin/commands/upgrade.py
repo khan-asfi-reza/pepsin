@@ -14,6 +14,12 @@ class Command(Base):
     Upgrade command class
     """
 
+    short_description = "Update or upgrade library"
+    help = """Upgrades a particular or multiple libraries
+    `$pepsin upgrade <library>`
+    Example: `$pepsin upgrade django`
+    """
+
     def add_argument(self, parser: ArgumentParser):
         parser.add_argument(
             "-r",
