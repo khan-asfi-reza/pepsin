@@ -4,8 +4,9 @@ Returns version of the package
 VERSION = "1.0.0"
 
 
-def get_version():
+def get_version() -> str:
     """
-    Returns version of the package
+    Gets the version of Pepsin package
+    Returns: str
     """
     return VERSION
