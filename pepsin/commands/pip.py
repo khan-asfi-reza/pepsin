@@ -15,6 +15,11 @@ class Command(Base):
         `pepsin pip --h`
     """
 
+    short_description = "Execute pip commands"
+    help = """Executes pip commands
+        EG: `pepsin pip help`
+        """
+
     def add_argument(self, parser: ArgumentParser):
         parser.add_argument(
             "command",
