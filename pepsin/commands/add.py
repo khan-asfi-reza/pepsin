@@ -10,7 +10,7 @@ class Command(InstallCommand):
     """
 
     short_description = "Install library"
-    help = """Install a particular or multiple libraries
-    `$pepsin install <library>`
-    Example: `$pepsin install django`
+    help = """Adds/Installs a particular or multiple libraries
+    `$pepsin add <library>`
+    Example: `$pepsin add django`
     """
