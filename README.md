@@ -2,9 +2,10 @@
     <h1>pepsin</h1>
     <div style="gap:10px;display: flex; justify-content: center" align="center">
         <img src="https://github.com/khan-asfi-reza/pepsin/actions/workflows/development.yaml/badge.svg" alt="">
+        <img src="https://github.com/khan-asfi-reza/pepsin/actions/workflows/publish.yaml/badge.svg" alt="">
         <img src="https://codecov.io/gh/khan-asfi-reza/pepsin/branch/master/graph/badge.svg?token=BS5ZJN8ZRI" alt="">
-        <img src="https://img.shields.io/badge/code%20style-pep8-orange.svg" alt="">
         <img src="https://img.shields.io/badge/linting-pylint-green" alt="">
+        <img src="https://img.shields.io/badge/code%20style-black-000000.svg" alt="">
 </div>
 </div>
 
@@ -17,23 +18,15 @@ To install packages
 
 Currently the goal is to create a simple tool to manage dependencies,
 Initialize projects (django, fastapi, flask) with production ready features.
-Initialize pytest, tox, github actions etc. Managing scripts to run,
+Initialize pytest, tox, github actions etc. which takes a lot of time to configure. Managing scripts to run,
 (Inspired by `npm run`)
 
-So primary goal is to -
 
-1. Create a toolchain to manage dependencies
-2. Project initialization
-3. Managing scripts
-4. File generation based on templates (tox, pytest)
-5. Dockerizing and customization hook
+### Features
 
-pepsin's code structure is heavily inspired by `django.core.management`
-pepsin implements almost the similar strategy of code writing and work process.
-pepsin cli library is written using builtin libraries like `argparse` `importlib` `pkgutil` `sys` `os` etc.
-For storing libraries and managing dependencies, `yaml` file has been selected
-as it has a very basic and minimalistic syntax.
-
+- Auto virtualenv generation
+- Auto venv activation, no need to activate `venv` before running `scripts`
+- Auto manage dependencies in `pepsin.yaml`
 
 ### Requirements
 `python 3.6+`
