@@ -28,7 +28,6 @@ Will not take any input
 """
 import os
 from argparse import ArgumentParser
-from typing import Dict
 
 from colorama import Fore
 
@@ -46,7 +45,7 @@ if __name__ == "__main__":
 """
 
 
-class Command(Base):
+class Init(Base):
     """
     Init command class
     """
@@ -79,7 +78,7 @@ class Command(Base):
         handler.add_prompts(
             Output(
                 name="Welcome",
-                title=f"Pepsin Setup Project\n{'-'*10}",
+                title=f"Pepsin Setup Project\n{'-' * 10}",
                 color=Fore.CYAN,
             ),
             Input(
