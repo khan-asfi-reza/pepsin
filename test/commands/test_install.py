@@ -4,14 +4,14 @@ from test.utils import command_path, set_subprocess
 
 import pytest
 
-from pepsin.commands.install import Command
+from pepsin.commands.install import Install
 from pepsin.config import PepsinConfig
 from pepsin.utils import check_file_exists, write_file
 
 
 @pytest.fixture
 def install_command():
-    return Command()
+    return Install()
 
 
 def test_install(install_command):
