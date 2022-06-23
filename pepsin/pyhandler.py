@@ -232,20 +232,13 @@ class PyHandler:
                    libs that passed and failed to uninstall
         """
         passed = []
-        failed = []
         to_uninstall = list(get_default(libs, []))
         for lib in to_uninstall:
             if lib in ["pip", "pip3"]:
                 self.error.write("Unable to uninstall pip")
             else:
-                try:
-                    subprocess.check_call(
-                        [self.pip_exec, "uninstall", lib, "-y"], env=self.env
-                    )
-                    passed.append(lib)
-                except subprocess.CalledProcessError:
-                    self.error.write(f"Unable to uninstall {lib}")
-                    failed.append(lib)
-        if failed:
-            handle_failed_libs(failed, "Unable to uninstall")
-        return passed, failed
+                subprocess.check_call(
+                    [self.pip_exec, "uninstall", lib, "-y"], env=self.env
+                )
+                passed.append(lib)
+        return passed, []
