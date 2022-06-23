@@ -276,6 +276,7 @@ def get_commands():
     _alias_commands = {}
     for command, klass in commands.items():
         _alias_commands.update({name: klass for name in klass.alias})
+        del command
     commands.update(_alias_commands)
     return commands
 
