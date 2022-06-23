@@ -5,9 +5,9 @@ import os
 import sys
 from typing import List, Optional
 
+from pepsin.base import get_command, get_commands, load_command_class
 from pepsin.base_io import IOBase
 from pepsin.const import COMMAND_NOT_FOUND_ERROR
-from pepsin.utils.base import get_commands, load_command_class
 from pepsin.version import get_version
 
 
@@ -53,7 +53,7 @@ class CLI(IOBase):
 
         """
         version = get_version()
-        if self.command in ["--help", "-h", "help"]:
+        if self.command in ["--help", "-h", "help", "--h"]:
             string = [
                 f"pepsin v{version}",
                 "Type the name of the command and --help for help on a"
@@ -61,13 +61,12 @@ class CLI(IOBase):
                 "",
                 "Available commands: ",
             ]
-            for command in get_commands():
-                command_class = load_command_class(command)
+            for command, command_class in get_commands().items():
                 string.append(f"{command} | {command_class.short_description}")
 
             return "\n".join(string)
 
-        command_class = load_command_class(self.command)
+        command_class = get_command(self.command)
         return command_class.format_help(self.command)
 
     def execute(self):
@@ -76,7 +75,7 @@ class CLI(IOBase):
         Returns: None
 
         """
-        if self.command in ["--help", "-h", "help"]:
+        if self.command in ["--help", "-h", "help", "--h"]:
             help_text = self.help_text()
             self.output(help_text)
 
@@ -86,7 +85,7 @@ class CLI(IOBase):
 
         else:
             try:
-                command_class = load_command_class(self.command)
+                command_class = get_command(self.command)
                 command_class.run(self.argv)
             except ModuleNotFoundError:
                 self.error(f"`{self.command}` Command not available")
