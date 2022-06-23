@@ -2,12 +2,17 @@
 Base class for writing commands, commands which will be executed
 through the cli
 """
+import functools
+import inspect
+import pkgutil
 import sys
 from abc import ABC, abstractmethod
 from argparse import ArgumentParser
-from typing import Dict
+from importlib import import_module
+from typing import Dict, Type
 
 from pepsin.base_io import IOBase, PromptHandler
+from pepsin.const import COMMAND_DIR
 from pepsin.error import InvalidCommandError
 from pepsin.template import TemplateList
 from pepsin.version import get_version
@@ -28,6 +33,8 @@ class Base(IOBase, ABC):
 
         3. ``command_data`` Contains parsed arguments and cli prompt answers
         formatted correctly.
+
+        4. `alias` the command can be called via other names
 
     Methods:
         1. ``add_argument`` Adds custom argument to the parser,
@@ -70,6 +77,8 @@ class Base(IOBase, ABC):
 
     help = ""
     short_description = ""
+    alias = []
+    command_name = ""
 
     def __init__(self):
         self.prompt_handler: PromptHandler = PromptHandler()
@@ -78,6 +87,14 @@ class Base(IOBase, ABC):
         self.command_args = None
         self.argv = []
         super().__init__()
+
+    @classmethod
+    def get_command_name(cls):
+        """
+        Returns: Name of the command in small
+        """
+        command_name = cls.command_name if cls.command_name else cls.__name__
+        return command_name.lower()
 
     def add_prompts(self, handler: PromptHandler, **options: Dict):
         """
@@ -217,3 +234,64 @@ class Base(IOBase, ABC):
         except InvalidCommandError as error:
             self.error(f"{error.__class__.__name__}: {error}")
             sys.exit(error.return_code)
+
+
+def load_command_class(name) -> dict[str, Type[Base]]:
+    """
+    Every Command module has a Command class, which will be imported
+    :return Command Class
+    """
+    module = import_module(f"pepsin.commands.{name}")
+    command_classes = {}
+    for cls in inspect.getmembers(module, inspect.isclass):
+        klass = cls[1]
+        if issubclass(klass, Base) and klass is not Base:
+            command_name = klass.get_command_name()
+            command_classes.update({command_name: klass})
+    return command_classes
+
+
+def find_command_modules():
+    """
+    Finds commands located in the commands directory
+    """
+    modules = [
+        name
+        for _, name, is_pkg in pkgutil.iter_modules([COMMAND_DIR])
+        if not is_pkg and not name.startswith("_")
+    ]
+    return modules
+
+
+@functools.lru_cache(maxsize=None)
+def get_commands():
+    """
+    Set of commands that will be returned
+    :return: set of commands
+    """
+    modules = find_command_modules()
+    commands: dict[str, Type[Base]] = {}
+    for name in modules:
+        commands.update(**load_command_class(name))
+    _alias_commands = {}
+    for command, klass in commands.items():
+        _alias_commands.update({name: klass for name in klass.alias})
+        del command
+    commands.update(_alias_commands)
+    return commands
+
+
+@functools.lru_cache(maxsize=None)
+def get_command(command: str) -> Base:
+    """
+    Returns command class instance
+    Args:
+        command: name of the command
+
+    Returns:
+    """
+    commands = get_commands()
+    klass = commands.get(command, None)
+    if not klass:
+        raise ModuleNotFoundError
+    return klass()

@@ -1,6 +1,6 @@
 import pytest
 
-from pepsin.commands.pip import Command as PipCommand
+from pepsin.commands.pip import Pip as PipCommand
 
 
 @pytest.fixture

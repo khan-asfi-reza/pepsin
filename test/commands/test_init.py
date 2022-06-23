@@ -3,7 +3,7 @@ from test.utils import command_path, make_multiple_inputs
 
 import pytest
 
-from pepsin.commands.init import Command as InitCommand
+from pepsin.commands.init import Init as InitCommand
 from pepsin.main import CLI
 
 

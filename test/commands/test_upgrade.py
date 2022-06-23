@@ -3,14 +3,14 @@ from urllib.error import URLError
 
 import pytest
 
-from pepsin.commands.upgrade import Command
+from pepsin.commands.upgrade import Upgrade
 from pepsin.config import PepsinConfig
 from pepsin.utils import write_file
 
 
 @pytest.fixture
 def upgrade_command():
-    return Command()
+    return Upgrade()
 
 
 def test_install(upgrade_command):

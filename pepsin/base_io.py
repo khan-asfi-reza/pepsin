@@ -24,7 +24,7 @@ class OutputWrapper(TextIOBase):
         "primary": Fore.CYAN,
     }
 
-    def __init__(self, out: TextIOBase, ending: str = "\n"):
+    def __init__(self, out, ending: str = "\n"):
         super().__init__()
         init(autoreset=True)
         self._out = out

@@ -9,7 +9,7 @@ from pepsin.pyhandler import PyHandler
 from pepsin.utils import get_default
 
 
-class Command(Base):
+class Install(Base):
     """
     Install command class
     """
@@ -19,6 +19,7 @@ class Command(Base):
 `$pepsin install <library>`
 Example: `$pepsin install django`
 """
+    alias = ["i", "add", "append"]
 
     def add_argument(self, parser: ArgumentParser):
         parser.add_argument(
