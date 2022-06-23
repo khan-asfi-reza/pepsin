@@ -15,9 +15,9 @@ class Run(Base):
     """
 
     short_description = "Runs script"
-    help = """Uninstall a particular or multiple libraries
-    `$pepsin uninstall <library>`
-    Example: `$pepsin uninstall falcon`
+    help = """Runs a particular or multiple scripts from the config file
+    `$pepsin run <script>`
+    Example: `$pepsin run start`
     """
 
     def add_argument(self, parser: ArgumentParser):
