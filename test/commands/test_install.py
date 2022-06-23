@@ -14,7 +14,7 @@ def install_command():
     return Install()
 
 
-def test_install(install_command):
+def test_install(install_command, monkeypatch):
     install_command.run(
         ["pepsin", "install", "flask", "-r", "requirements.txt"]
     )
