@@ -1,10 +1,12 @@
 import os
 from pathlib import Path
-from test.utils import safe_remove_file
+from test.utils import command_path, safe_remove_file
 
 import pytest
 
 from pepsin.config import PepsinConfig
+from pepsin.pyhandler import PyHandler
+from pepsin.utils import OSEnum
 
 
 @pytest.fixture
@@ -45,3 +47,9 @@ def test_init_config():
     conf = PepsinConfig()
     conf.initialize_config()
     assert conf.config_exists()
+
+
+def test_py_handler(monkeypatch):
+    monkeypatch.setattr("pepsin.utils.base.get_os", lambda _: OSEnum.WIN)
+    handler = PyHandler()
+    assert "scripts" in handler.executable
