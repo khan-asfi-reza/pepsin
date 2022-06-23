@@ -5,7 +5,7 @@ import os
 import sys
 from typing import List, Optional
 
-from pepsin.base import get_command, get_commands, load_command_class
+from pepsin.base import get_command, get_commands
 from pepsin.base_io import IOBase
 from pepsin.const import COMMAND_NOT_FOUND_ERROR
 from pepsin.version import get_version
