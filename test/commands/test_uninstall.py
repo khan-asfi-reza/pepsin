@@ -2,8 +2,8 @@ from test.utils import command_path, get_installed_libs_in_venv
 
 import pytest
 
-from pepsin.commands.install import Command as InstallCommand
-from pepsin.commands.uninstall import Command as UninstallCommand
+from pepsin.commands.install import Install as InstallCommand
+from pepsin.commands.uninstall import Uninstall as UninstallCommand
 from pepsin.config import PepsinConfig
 
 
