@@ -1,9 +1,11 @@
 import os
+from subprocess import CalledProcessError
 from test.utils import command_path, get_installed_libs_in_venv
 
 import pytest
 
 from pepsin.commands.install import Install
+from pepsin.commands.uninstall import Uninstall
 from pepsin.config import PepsinConfig
 from pepsin.utils import OSEnum, check_dir_exists, check_file_exists, get_os
 
@@ -11,6 +13,11 @@ from pepsin.utils import OSEnum, check_dir_exists, check_file_exists, get_os
 @pytest.fixture
 def install_command():
     return Install()
+
+
+@pytest.fixture
+def uninstall_command():
+    return Uninstall()
 
 
 def test_fail_requirement(install_command, monkeypatch):

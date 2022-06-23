@@ -25,7 +25,7 @@ def test_uninstall_command(uninstall_command, install_command):
     assert conf.libraries == ["flask"]
     libraries = get_installed_libs_in_venv("test_uninstall_venv")
     assert "flask" in libraries
-    uninstall_command.run(["pepsin", "uninstall", "flask"])
+    uninstall_command.run(["pepsin", "uninstall", "flask", "pip3"])
     conf = PepsinConfig()
     assert conf.libraries == []
     libraries = get_installed_libs_in_venv("test_uninstall_venv")
