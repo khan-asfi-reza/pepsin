@@ -7,7 +7,7 @@ from pepsin.base import Base
 from pepsin.pyhandler import PyHandler
 
 
-class Command(Base):
+class Pip(Base):
     """
     Executes Pip command
     Examples:
