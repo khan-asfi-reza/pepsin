@@ -9,7 +9,7 @@ from pepsin.pyhandler import PyHandler
 from pepsin.utils import get_default
 
 
-class Command(Base):
+class Uninstall(Base):
     """
     Handles library uninstallation
     """
