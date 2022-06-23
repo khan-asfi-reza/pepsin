@@ -47,9 +47,3 @@ def test_init_config():
     conf = PepsinConfig()
     conf.initialize_config()
     assert conf.config_exists()
-
-
-def test_py_handler(monkeypatch):
-    monkeypatch.setattr("pepsin.utils.base.get_os", lambda _: OSEnum.WIN)
-    handler = PyHandler()
-    assert "scripts" in handler.executable
