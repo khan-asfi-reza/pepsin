@@ -1,15 +1,28 @@
 """
-This module handles library installation
+Install Command
+Usage:
+    `pepsin install <library>`
+
+Installs libraries and store library name in the config file
+
+``
+$pepsin install django flask
+``
+
+Optional Parameters:
+`-r=requirement.txt`
+Requirement file containing library names
+
 """
 from argparse import ArgumentParser
 
-from pepsin.base import Base
+from pepsin.base import BaseCommand
 from pepsin.config import PepsinConfig
 from pepsin.pyhandler import PyHandler
 from pepsin.utils import get_default
 
 
-class Install(Base):
+class Install(BaseCommand):
     """
     Install command class
     """
