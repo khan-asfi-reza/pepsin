@@ -3,13 +3,13 @@ Uninstall a library
 """
 from argparse import ArgumentParser
 
-from pepsin.base import Base
+from pepsin.base import BaseCommand
 from pepsin.config import PepsinConfig
 from pepsin.pyhandler import PyHandler
 from pepsin.utils import get_default
 
 
-class Uninstall(Base):
+class Uninstall(BaseCommand):
     """
     Handles library uninstallation
     """
