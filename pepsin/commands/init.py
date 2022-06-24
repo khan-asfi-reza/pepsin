@@ -3,7 +3,7 @@ Init Command
 Usage:
     `pepsin init`
 
-Generates a python boilerplate normal project along
+Generates a python project along
 with virtual environment.
 
 `init` will prompt for 4 things such as
@@ -31,7 +31,7 @@ from argparse import ArgumentParser
 
 from colorama import Fore
 
-from pepsin.base import Base
+from pepsin.base import BaseCommand
 from pepsin.base_io import Input, Output
 from pepsin.config import PepsinConfig, get_project_name
 from pepsin.pyhandler import PyHandler
@@ -45,7 +45,7 @@ if __name__ == "__main__":
 """
 
 
-class Init(Base):
+class Init(BaseCommand):
     """
     Init command class
     """
