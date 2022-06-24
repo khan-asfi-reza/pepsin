@@ -3,11 +3,11 @@ PIP Command module
 """
 from argparse import ArgumentParser
 
-from pepsin.base import Base
+from pepsin.base import BaseCommand
 from pepsin.pyhandler import PyHandler
 
 
-class Pip(Base):
+class Pip(BaseCommand):
     """
     Executes Pip command
     Examples:

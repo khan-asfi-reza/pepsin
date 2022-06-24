@@ -2,11 +2,11 @@ from typing import Union
 
 import pytest
 
-from pepsin.base import Base
+from pepsin.base import BaseCommand
 from pepsin.error import InvalidCommandError
 
 
-class CommandTest(Base):
+class CommandTest(BaseCommand):
     def execute(self, *args, **kwargs) -> Union[None, str]:
         raise InvalidCommandError("Test Error")
 

@@ -4,12 +4,12 @@ Runs a script
 from argparse import ArgumentParser
 from subprocess import CalledProcessError
 
-from pepsin.base import Base
+from pepsin.base import BaseCommand
 from pepsin.config import PepsinConfig
 from pepsin.pyhandler import PyHandler
 
 
-class Run(Base):
+class Run(BaseCommand):
     """
     Handles run script
     """
