@@ -18,7 +18,7 @@ from pepsin.template import TemplateList
 from pepsin.version import get_version
 
 
-class Base(IOBase, ABC):
+class BaseCommand(IOBase, ABC):
     """
     The base class which all commands will inherit
     and it contains the signature methods and attributes
@@ -236,7 +236,7 @@ class Base(IOBase, ABC):
             sys.exit(error.return_code)
 
 
-def load_command_class(name) -> dict[str, Type[Base]]:
+def load_command_class(name) -> dict[str, Type[BaseCommand]]:
     """
     Every Command module has a Command class, which will be imported
     :return Command Class
@@ -245,7 +245,7 @@ def load_command_class(name) -> dict[str, Type[Base]]:
     command_classes = {}
     for cls in inspect.getmembers(module, inspect.isclass):
         klass = cls[1]
-        if issubclass(klass, Base) and klass is not Base:
+        if issubclass(klass, BaseCommand) and klass is not BaseCommand:
             command_name = klass.get_command_name()
             command_classes.update({command_name: klass})
     return command_classes
@@ -270,7 +270,7 @@ def get_commands():
     :return: set of commands
     """
     modules = find_command_modules()
-    commands: dict[str, Type[Base]] = {}
+    commands: dict[str, Type[BaseCommand]] = {}
     for name in modules:
         commands.update(**load_command_class(name))
     _alias_commands = {}
@@ -282,7 +282,7 @@ def get_commands():
 
 
 @functools.lru_cache(maxsize=None)
-def get_command(command: str) -> Base:
+def get_command(command: str) -> BaseCommand:
     """
     Returns command class instance
     Args:
