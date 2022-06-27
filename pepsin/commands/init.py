@@ -36,6 +36,7 @@ from pepsin.base_io import Input, Output
 from pepsin.config import PepsinConfig, get_project_name
 from pepsin.pyhandler import PyHandler
 from pepsin.template import Template, TemplateList
+from pepsin.utils import write_file
 
 MAIN_FILE = ""
 """# Generated with pepsin
@@ -125,10 +126,11 @@ class Init(BaseCommand):
         working_dir = os.getcwd()
 
         if not os.path.exists(f"{working_dir}/{project_name}/main.py"):
-            with open(
-                f"{project_name}/main.py", "w", encoding="utf-8"
-            ) as file:
-                file.write(MAIN_FILE)
+            write_file(f"{project_name}/main.py", MAIN_FILE)
+
+        if not os.path.exists(f"{working_dir}/{project_name}/tests"):
+            os.mkdir("tests")
+            write_file(f"{project_name}/tests", "# Your Test cases here")
 
     def add_templates(self, template_list: TemplateList):
         """
