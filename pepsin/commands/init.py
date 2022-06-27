@@ -123,6 +123,9 @@ class Init(BaseCommand):
 
         with open(f"{project_name}/__init__.py", "w", encoding="utf-8"):
             pass
+
+        write_file(f"{project_name}/__init__.py", "")
+
         working_dir = os.getcwd()
 
         if not os.path.exists(f"{working_dir}/{project_name}/main.py"):
