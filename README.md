@@ -9,10 +9,6 @@
 </div>
 </div>
 
-#### Python Project Initializer CLI Tool, uses pip
-To install packages
-
-`Discarded previous version for not maintaining and complexity of code`
 
 ### In Development
 
@@ -27,6 +23,9 @@ Initialize pytest, tox, github actions etc. which takes a lot of time to configu
 - Auto virtualenv generation
 - Auto venv activation, no need to activate `venv` before running `scripts`
 - Auto manage dependencies in `pepsin.yaml`
+- Install and store libraries
+- Run scripts stored in the configuration file
+
 
 ### Requirements
 `python 3.6+`
@@ -134,8 +133,74 @@ Note: install command will by default create a `pepsin.yaml` file and a virtuale
 
 ### 3. `uninstall`
 
-Uninstall a library that is installed in your envrionment
+Uninstall a library that is installed in your environment
 
 ```shell
-$ pepsin uninstall
+$ pepsin uninstall <library>
 ```
+
+Example:
+
+```shell
+$ pepsin uninstall flask
+```
+
+Uninstall command will remove the library from the virtual environment as well as the config
+
+### 4. `update`
+
+Alias: `upgrade`
+
+Upgrades a library that is installed in your environment
+
+```shell
+$ pepsin upgrade <library>
+```
+
+Example:
+
+```shell
+$ pepsin upgrade flask
+```
+
+
+### 5. `run`
+
+Runs a script from the `pepsin.yaml`
+
+To store and run scripts you must write your scripts in the pepsin configuration
+
+Example:
+
+`pepsin.yaml`
+```yaml
+name: example # Name of the project
+author: Khan Asfi Reza # Author's name
+email: info@khanasfireza.com # Author's email
+venv: venv # Virtualenv directory name
+license: MIT # Project license type
+libraries:
+  # Installed libraries
+  - django
+  - psycopg2
+scripts:
+  start: example/manage.py startserver
+  test: pytest examples/tests
+```
+
+To run the `start` script use pepsin run command
+```shell
+$ pepsin run start
+```
+which will fire the `start` script
+
+### 6. `pip`
+
+Run regular pip command
+
+```shell
+$ pepsin pip freeze
+```
+
+Pip will automatically use available virtual env (if available) otherwise
+it will use global pip
