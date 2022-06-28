@@ -165,6 +165,7 @@ $ pepsin upgrade flask
 
 
 ### 5. `run`
+Command Alias: `r`
 
 Runs a script from the `pepsin.yaml`
 
@@ -185,14 +186,30 @@ libraries:
   - psycopg2
 scripts:
   start: example/manage.py startserver
-  test: pytest examples/tests
+  test: pytest
 ```
 
 To run the `start` script use pepsin run command
+
 ```shell
 $ pepsin run start
 ```
+or
+```shell
+$ pepsin r start
+```
 which will fire the `start` script
+
+You can add other cli commands as well
+
+```yaml
+scripts:
+  migrate: django-admin makemigrations
+```
+
+```shell
+$ pepsin run migrate
+```
 
 ### 6. `pip`
 
