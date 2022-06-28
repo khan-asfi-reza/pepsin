@@ -121,9 +121,6 @@ class Init(BaseCommand):
         except FileExistsError:
             pass
 
-        with open(f"{project_name}/__init__.py", "w", encoding="utf-8"):
-            pass
-
         write_file(f"{project_name}/__init__.py", "")
 
         working_dir = os.getcwd()
@@ -133,7 +130,7 @@ class Init(BaseCommand):
 
         if not os.path.exists(f"{working_dir}/{project_name}/tests"):
             os.mkdir("tests")
-            write_file(f"{project_name}/tests", "# Your Test cases here")
+            write_file(f"tests/test_package.py", "# Your Test cases here")
 
     def add_templates(self, template_list: TemplateList):
         """
