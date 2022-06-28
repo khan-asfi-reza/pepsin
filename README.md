@@ -12,9 +12,9 @@
 
 ### In Development
 
-Currently the goal is to create a simple tool to manage dependencies,
+Currently, the goal is to create a simple tool to manage dependencies,
 Initialize projects (django, fastapi, flask) with production ready features.
-Initialize pytest, tox, github actions etc. which takes a lot of time to configure. Managing scripts to run,
+Initialize pytest, tox, GitHub actions etc. which takes a lot of time to configure. Managing scripts to run,
 (Inspired by `npm run`)
 
 
