@@ -3,6 +3,7 @@ Runs a script
 """
 from argparse import ArgumentParser
 from subprocess import CalledProcessError
+from typing import List
 
 from pepsin.base import BaseCommand
 from pepsin.config import PepsinConfig
@@ -43,7 +44,14 @@ class Run(BaseCommand):
         script_name = self.command_data.get("script")[0]
         if script_name in config.scripts:
             try:
-                handler.python_execute(*config.scripts[script_name].split(" "))
+                script_env: List[str] = config.scripts[script_name].split(" ")
+                is_package = True
+                for value in script_env:
+                    if ".py" in value:
+                        is_package = False
+                if is_package:
+                    script_env.insert(0, "-m")
+                handler.python_execute(*script_env)
             except CalledProcessError:
                 self.error(f"Error in script : {script_name}")
         else:
