@@ -106,23 +106,26 @@ class PepsinConfig:
         """
         return check_file_exists("pepsin.yaml")
 
-    def update(self, **kwargs):
+    def update(self, *args, **kwargs):
         """
         Updates configuration and saves them in the yaml config
         Args:
+            *args: Tuple(Dict) | Values to update and save
             **kwargs: Dict | Values to update and save
 
         Returns:
 
         """
-        libs = kwargs.get("libraries", [])
+        data = {}
+        data.update(*args, **kwargs)
+        libs = data.get("libraries", [])
         # Update libraries
         self.update_libraries(libs)
-        for key in kwargs:
+        for key in data:
             if key != "libraries" and key in self.get_slots():
-                setattr(self, key, kwargs.get(key))
+                setattr(self, key, data.get(key))
         # Update configuration and save to yaml
-        self.__conf.append(**self.format_config())
+        self.__conf.append(self.format_config())
         self.__conf.save()
 
     def update_libraries(self, libs: List[str]):

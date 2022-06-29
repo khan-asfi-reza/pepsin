@@ -17,7 +17,7 @@ def test_init_with_option_args(init_command, monkeypatch):
     monkeypatch.setattr(
         "builtins.input",
         make_multiple_inputs(
-            ["testproject", "mit", "author", "name@name.com"]
+            ["testproject", "", "", "mit", "author", "name@name.com"]
         ),
     )
     # Run the command
@@ -60,7 +60,7 @@ def test_init_with_predefined_files(monkeypatch):
     # Set input parameter
     monkeypatch.setattr(
         "builtins.input",
-        make_multiple_inputs(["mit", "author", "name@name.com"]),
+        make_multiple_inputs(["", "", "mit", "author", "name@name.com"]),
     )
 
     os.mkdir("testproject")

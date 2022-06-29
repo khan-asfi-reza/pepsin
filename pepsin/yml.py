@@ -69,12 +69,12 @@ class YAMLConfig:
             return yaml_to_dict(self.__filename)
         return self.__config
 
-    def append(self, **kwargs):
+    def append(self, *args, **kwargs):
         """
         Inserts data in the config dictionary
         Returns: None
         """
-        self.__config.update(**kwargs)
+        self.__config.update(*args, **kwargs)
         for key, val in self.__config.items():
             setattr(self, key, val)
 

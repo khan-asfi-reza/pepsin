@@ -6,11 +6,13 @@ Usage:
 Generates a python project along
 with virtual environment.
 
-`init` will prompt for 4 things such as
-1. project_name
-2. License
-3. Author
-4. Email
+`init` will prompt for 6 things such as
+1. Project Name
+2. Project description
+3. Github repo
+4. License
+5. Author
+6. Email
 
 and will create a project folder under the name
 `project_name`
@@ -24,9 +26,8 @@ Will create project without asking for project_name
 Custom venv directory
 
 `--no-input`
-Will not take any input
+Will ignore the prompt part
 """
-import os
 from argparse import ArgumentParser
 
 from colorama import Fore
@@ -35,15 +36,12 @@ from pepsin.base import BaseCommand
 from pepsin.base_io import Input, Output
 from pepsin.config import PepsinConfig, get_project_name
 from pepsin.pyhandler import PyHandler
-from pepsin.template import Template, TemplateList
-from pepsin.utils import write_file
-
-MAIN_FILE = ""
-"""# Generated with pepsin
-
-if __name__ == "__main__":
-    print("Egg and spam")
-"""
+from pepsin.template import (
+    Template,
+    TemplateDirectory,
+    TemplateFromString,
+    TemplateList,
+)
 
 
 class Init(BaseCommand):
@@ -90,6 +88,20 @@ class Init(BaseCommand):
                 skip=True,
             ),
             Input(
+                name="description",
+                title="Description",
+                default="",
+                required=False,
+                skip=True,
+            ),
+            Input(
+                name="github",
+                title="Github Repo",
+                default="",
+                required=False,
+                skip=True,
+            ),
+            Input(
                 name="author", title="Author", default="Author", required=False
             ),
             Input(
@@ -111,32 +123,29 @@ class Init(BaseCommand):
         kwargs.update(name=project_name)
         return kwargs
 
-    def handle_directory(self):
-        """
-        Handle directory creation
-        """
-        project_name = self.command_data.get("name")
-        try:
-            os.mkdir(project_name)
-        except FileExistsError:
-            pass
-
-        write_file(f"{project_name}/__init__.py", "")
-
-        working_dir = os.getcwd()
-
-        if not os.path.exists(f"{working_dir}/{project_name}/main.py"):
-            write_file(f"{project_name}/main.py", MAIN_FILE)
-
-        if not os.path.exists(f"{working_dir}/{project_name}/tests"):
-            os.mkdir("tests")
-            write_file(f"tests/test_package.py", "# Your Test cases here")
-
     def add_templates(self, template_list: TemplateList):
         """
         Adds custom template
         """
+        project_name = self.command_data.get("name")
         template_list.add_template(
+            # Base Directory / Project Directory
+            TemplateDirectory(
+                project_name,
+            ),
+            # Project Base Python File
+            TemplateFromString("__init__.py", text="", directory=project_name),
+            Template(
+                "main.py",
+                directory=project_name,
+            ),
+            # Project Test File
+            Template(
+                "template_test.py",
+                directory=f"{project_name}/tests",
+                save_as="test_package.py",
+            ),
+            # Config files
             Template(template_name=".gitignore"),
             Template(
                 template_name="Readme.MD",
@@ -149,8 +158,10 @@ class Init(BaseCommand):
         Inherited execute method
         """
         conf = PepsinConfig()
-        conf.update(**self.command_data)
+        conf.update(
+            self.command_data,
+            scripts={"main": f"{self.command_data.get('name')}/main.py"},
+        )
         PyHandler(conf, self.stdout, self.stderr)
         # Installs virtualenv library
-        self.handle_directory()
         self.output("\nProject initialization complete")
