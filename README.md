@@ -17,6 +17,8 @@ Initialize projects (django, fastapi, flask) with production ready features.
 Initialize pytest, tox, GitHub actions etc. which takes a lot of time to configure. Managing scripts to run,
 (Inspired by `npm run`)
 
+### TODO
+- Use pyproject.toml config
 
 ### Features
 
@@ -25,7 +27,6 @@ Initialize pytest, tox, GitHub actions etc. which takes a lot of time to configu
 - Auto manage dependencies in `pepsin.yaml`
 - Install and store libraries
 - Run scripts stored in the configuration file
-
 
 ### Requirements
 `python 3.6+`
